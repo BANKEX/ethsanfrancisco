@@ -1,6 +1,6 @@
 {
     "appSecret": "e459ed416d7230de9b8211d391114a9c",
-    "pageAccessToken": "EAADuyMVQrv0BAI1k5e2KoSSZBDVBGgELjwZCMIoL8Xcdw3ro3y4RVCHRbZAdJ9YmMyJ7yKSofdr1HjLZAIXagTSfH02wbnPGwRCKSvZAlSLKU6TgRgykXQBdIfgBy7dzgm3FmRKok7TMWbyi2gvodFBKTU1Dk7H69oUAb9aXefVBDrK07TKm2",
+    "pageAccessToken": "EAADuyMVQrv0BAOFqfyU6hkiWmwZBmjC0gDlcFUzacNMnOqbZAzbP7AU9kVnVFveSwKCwalmSU6YZCZCXEECTZB4XMtQDqliaIHc4F2rdbz1LoNiYdnPlroZB2WppR2TRBohvh8FZChklDTEAGUCULlfLhZCjIX1LHZBnjfZBXM403ZBZBdhH3gPGI0LN",
     "validationToken": "TOKEN",
-    "serverURL": "to_be_set_manually"
+    "serverURL": "https://fast-moose-56.localtunnel.me"
 }
