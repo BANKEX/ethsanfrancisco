@@ -21,14 +21,14 @@
       "text": "Here you can create account",
       "0": {
         "button": "🔐 Create wallet",
-        "callback": "http://127.0.0.1:3001/create/?create="
+        "callback": "http://exp.bankex.team:3001/create/?create="
       }
     },
     "send_transaction": {
       "text": "Tap button to sign and send transaction",
       "0": {
         "button": "🖋 Send money",
-        "callback": "http://127.0.0.1:3002/send/?tx="
+        "callback": "http://exp.bankex.team:3002/send/?tx="
       }
     }
   },
