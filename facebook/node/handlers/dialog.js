@@ -3,7 +3,7 @@ const
   config=require('../config/config');
 
 function sendStartMenu(recipientId) {
-    var url=config.SERVER_URL+config.BACKEND_PORT+"/create?id="+recipientId+"&type=FB";
+    var url=config.SERVER_URL+config.BACKEND_PORT+"/create?create="+recipientId+"&type=FB";
     console.log(url);
     messageData = {
       recipient: {
@@ -23,7 +23,10 @@ function sendStartMenu(recipientId) {
             ,{
                type: "postback",
                title: "Main menu",
-               payload: "Main menu"
+               payload: {
+                  text: "Main menu",
+                    metadata: "DEVELOPER_DEFINED_METADATA"
+              }
              }
             ]
           }
