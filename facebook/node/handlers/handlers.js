@@ -1,6 +1,7 @@
 
 const
-  utils = require('./utils');
+  utils = require('./utils'),
+  dilaog = require('./dialog');
 
 
 /*
@@ -113,7 +114,8 @@ function receivedMessage(event) {
           break;
   
         case 'button':
-            utils.sendButtonMessage(senderID);
+            dialog.sendStartMenu(senderID);
+            //utils.sendButtonMessage(senderID);
           break;
   
         case 'generic':
@@ -145,6 +147,7 @@ function receivedMessage(event) {
           break;
   
         default:
+
             utils.sendTextMessage(senderID, messageText);
       }
     } else if (messageAttachments) {
