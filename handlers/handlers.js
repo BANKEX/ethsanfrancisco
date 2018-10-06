@@ -97,8 +97,15 @@ const sendTransaction = new WizardScene(
     },
 )
 
+async function getAddresses(ctx) {
+    const user = await db.user.find.oneByID(ctx.message.from.id);
+    const text = `Ethereum address: ${user.ethereumAddress}\nBitcoin address: ${user.bitcoinAddress}`;
+    return ctx.reply(text);
+}
+
 module.exports = {
     start: start,
     createAccount: createAccount,
-    sendTransaction: sendTransaction
+    sendTransaction: sendTransaction,
+    getAddresses: getAddresses
 }
