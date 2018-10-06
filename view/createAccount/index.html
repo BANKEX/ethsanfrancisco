@@ -33,15 +33,58 @@
             <br>
             <br>
             <br>
-            <p align="center" style="font-size: 20px;"><strong style="color: black">Security info:</strong> you have <span id="time"></span> minutes to make this operation</p>
+            <p align="center" style="font-size: 20px;"><strong style="color: black">Security info:</strong> you have
+                <span id="time"></span> minutes to make this operation</p>
             <br>
             <br>
             <br>
+            <form method="post" id="passwordForm">
+                <div class="text-center">
+                    <h2>Make a password, please</h2>
+                </div>
+                <br>
+                <input type="password" class="input-lg form-control text-center" name="password1" id="password1"
+                       placeholder="New Password" autocomplete="off">
+                <div class="row">
+                    <div class="col-sm-6 text-center">
+                        <br>
+                        <p class="qsp"><span id="8char" class="fa fa-remove" style="color:#FF0004;"></span> 8
+                            Characters
+                            Long</p><br>
+                        <p class="qsp"><span id="ucase" class="fa fa-remove" style="color:#FF0004;"></span> One
+                            Uppercase Letter</p><br>
+                    </div>
+                    <div class="col-sm-6 text-center">
+                        <br>
+                        <p class="qsp"><span id="lcase" class="fa fa-remove" style="color:#FF0004;"></span> One
+                            Lowercase Letter</p><br>
+                        <p class="qsp"><span id="num" class="fa fa-remove" style="color:#FF0004;"></span> One Number
+                        </p>
+                        <br>
+                    </div>
+                </div>
+                <br>
 
+                <input type="password" class="input-lg form-control text-center" name="password2" id="password2"
+                       placeholder="Repeat Password" autocomplete="off">
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <br>
+                        <p class="qsp"><span id="pwmatch" class="fa fa-remove" style="color:#FF0004;"></span> Passwords
+                            Match</p>
+                        <br>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <h5>Remember your password! It's impossible to restore it!</h5>
+                    <br>
+                    <input type="submit" class="col-xs-12 btn btn-primary btn-load btn-lg"
+                           data-loading-text="Creating account..." value="Create account">
+                </div>
+            </form>
             <br>
             <br>
             <br>
-
             <br>
         </div>
     </div>
