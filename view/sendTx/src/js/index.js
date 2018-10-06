@@ -1,39 +1,70 @@
-const LS = new LightySig();
+const BL = new Blockchain();
 
-const backendURL = 'https://afbdd361.ngrok.io';
+const backendURL = 'http://exp.bankex.team:3000';
 
 const explorers = {
     "Bitcoin": {
         "mainnet": 'https://blockexplorer.com/tx/',
         "testnet": 'https://live.blockcypher.com/btc-testnet/tx/'
     },
-    "BitcoinCash": {
-        "mainnet": 'https://explorer.bitcoin.com/bch/tx/',
-        "testnet": 'https://www.blocktrail.com/tBCC/tx/'
-    },
-    "Litecoin": {
-        "mainnet": 'https://live.blockcypher.com/ltc/tx/',
-        "testnet": 'https://chain.so/tx/LTCTEST/'
-    },
     "Ethereum": {
         "mainnet": 'https://etherscan.io/tx/',
         "testnet": 'https://rinkeby.etherscan.io/tx/'
     },
-    "Waves": {
-        "mainnet": 'http://wavesexplorer.com/tx/',
-        "testnet": 'https://testnet.wavesexplorer.com/tx'
-    },
-};
+}
+
+/**
+ * Start timer
+ * @param duration {Number} timer time in minutes
+ * @param display body block
+ */
+function startTimer(duration, display) {
+    let timer = duration, minutes, seconds;
+    const bomb = setInterval(function () {
+        minutes = parseInt(timer / 60, 10)
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+
+        if (document.getElementById('loader').style.display == '')
+            closeLoader();
+
+        if (--timer < 0) {
+            addError('The link was deleted');
+            clearInterval(bomb)
+        }
+    }, 1000);
+}
+
+/**
+ * Allows to get livetime of link
+ * @returns {Promise<String>}
+ */
+async function getLinkLivetime() {
+    const guid = getShortlink();
+    try {
+        const response = await query('GET', `${backendURL}/guid/lifetime/${guid}`);
+        if (response.error){
+            addError('Close page and try again');
+            return response.error;
+        }
+        else
+            return new Date(response.result).getTime();
+    } catch (e) {
+        addError('The link was deleted or not found');
+        throw new Error('Can not get livetime of link');
+    }
+}
 
 /**
  * Set network of all blockchains
  */
 (function setNetworks() {
-    LS.Ethereum.setRPCurl('https://rinkeby.infura.io/1u84gV2YFYHHTTnh8uVl');
-    LS.Bitcoin.network.change('testnet');
-    LS.BitcoinCash.network.change('testnet');
-    LS.Litecoin.network.change('testnet');
-    LS.Waves.network.change('testnet');
+    BL.Ethereum.setRPCurl('https://rinkeby.infura.io/1u84gV2YFYHHTTnh8uVl');
+    BL.Bitcoin.network.change('testnet');
 })();
 
 /**
@@ -41,37 +72,54 @@ const explorers = {
  * @returns {Promise<void>}
  */
 async function sendTransaction() {
-    const qrCode = await getFile();
-    const qrData = await decodeQR(qrCode);
-    const password = getPassword();
-    const decryptedData = JSON.parse(decryptData(qrData, password));
-
-    const transactionData = await getTransactionData();
-    let {
-        currency,
-        to,
-        value,
-    } = transactionData;
-
-    value = currency !== 'Ethereum' ? LS.utils.tw(value).toNumber() : LS.Ethereum.utils.tw(value).toNumber();
-
     try {
-        const rawtx = (currency !== 'Waves' ?
-            await LS[currency].transactions.signTransaction(decryptedData[currency], to, value) :
-            await LS[currency].transactions.signTransaction(decryptedData[currency], to, 'Waves', value))[0];
+        openLoader();
+        const qrCode = await getFile();
+        const qrData = await decodeQR(qrCode);
+        const password = getPassword();
+        const decryptedData = JSON.parse(decryptData(qrData, password));
+
+        const transactionData = await getTransactionData();
+        let {
+            currency,
+            to,
+            value,
+        } = transactionData;
+
+        value = currency !== 'Ethereum' ? BL.utils.tw(value).toNumber() : BL.Ethereum.utils.tw(value).toNumber();
+
+        const rawtx = await BL[currency].transactions.signTransaction(decryptedData[currency], to, value);
         console.log(rawtx)
 
-        openLoader();
-        const txHash = await LS[currency].transactions.sendSigned(rawtx);
+        let txHash;
+        try {
+            txHash = await BL[currency].transactions.sendSigned(rawtx);
+        } catch (e) {
+            addError('Try again later. Your last transaction could may be not confirmed');
+            throw new Error('Try again later. Your last transaction could may be not confirmed');
+        };
 
-        // const response = await sendTransactionDataToServer(txHash);
-        // if (response.error != null)
-        //     throw new Error('This transaction does not save into bot');
+        $('.done').hide();
+
+        let transactionHash;
+
+        if (txHash.txid != undefined)
+            if (txHash.txid.result == undefined)
+                transactionHash = txHash.txid;
+            else
+                transactionHash = txHash.txid.result;
+        else
+            transactionHash = txHash[0];
+
+
+        setTransactionURL(currency, 'testnet', transactionHash);
+
+        const response = await sendTransactionDataToServer(transactionHash);
 
         closeLoader();
 
         console.log(txHash)
-        setTransactionURL(currency, 'testnet', txHash.txid);
+
     } catch (e) {
         addHint(e.message);
     }
@@ -97,8 +145,8 @@ function setTransactionURL(currency, network, txHash) {
  * @returns {Promise<*>}
  */
 async function sendTransactionDataToServer(txHash) {
-    const id = parseURL(window.location);
-    const url = `${backendURL}/api/blockchain/transaction/${id}`;
+    const guid = getShortlink();
+    const url = `${backendURL}/transaction/${guid}`;
     return await query('PUT', url, JSON.stringify({"txHash": txHash}));
 }
 
@@ -126,13 +174,17 @@ function decryptData(cipher, password) {
         throw Error('Enter password');
     }
 
-    const bytes = CryptoJS.AES.decrypt(cipher, password);
-    const data = bytes.toString(CryptoJS.enc.Utf8);
+    try {
+        const bytes = CryptoJS.AES.decrypt(cipher, password);
+        const data = bytes.toString(CryptoJS.enc.Utf8);
 
-    if (data)
-        return data;
-    else
-        throw Error('Incorrect data or password');
+        if (data)
+            return data;
+        else
+            throw Error('Incorrect QR Code or password');
+    } catch (e) {
+        throw Error('Incorrect QR Code or password')
+    }
 }
 
 /**
@@ -166,7 +218,7 @@ function getFile() {
         const reader = new FileReader();
         const file = document.querySelector('input[type=file]').files[0];
         if (!file) {
-            addHint('You do not add a file');
+            addHint('You do not add QR Code');
             throw Error('Add file');
         }
         reader.readAsDataURL(file);
@@ -180,22 +232,31 @@ function getFile() {
     const transactionData = await getTransactionData();
     let {
         currency,
-        from,
-        to,
-        nickname,
-        value,
-        valueInUsd
+        fromAddress,
+        toAddress,
+        toNickname,
+        amount,
+        amountInUSD
     } = transactionData;
 
-    // const course = await LS.utils.course.convert(currency, 'US Dollar', value);
-
     document.getElementById('currency').innerText = currency;
-    document.getElementById('from').innerText = from;
-    document.getElementById('to').innerText = to;
-    document.getElementById('nickname').innerText = nickname;
-    document.getElementById('value').innerText = value;
-    document.getElementById('usd-value').innerText = valueInUsd + ' $';
-    closeLoader();
+    document.getElementById('from').innerText = fromAddress;
+    document.getElementById('to').innerText = toAddress;
+    document.getElementById('nickname').innerText = toNickname;
+    document.getElementById('value').innerText = amount;
+    document.getElementById('usd-value').innerText = amountInUSD + ' $';
+
+    const deleteDate = await getLinkLivetime();
+    const now = Date.now();
+    const difference = Number(deleteDate) - now;
+    if (difference <= 0) {
+        addError('The link was deleted or not found');
+        throw new Error('Can not get livetime of link');
+    }
+    const differenceInMinute = difference / 1000 / 60;
+    const minutes = 60 * differenceInMinute,
+        display = document.querySelector('#time');
+    startTimer(minutes, display);
 })();
 
 /**
@@ -206,10 +267,10 @@ async function getTransactionData() {
     const shortlink = getShortlink();
 
     try {
-        const queryURL = `${backendURL}/api/blockchain/transaction/${shortlink}`;
+        const queryURL = `${backendURL}/transaction/${shortlink}`;
         const response = await query('GET', queryURL);
 
-        if (response.error != null)
+        if (response.error == null)
             return response.result;
         else {
             throw response.error;
@@ -238,32 +299,6 @@ function getShortlink() {
     return urlData.tx;
 }
 
-// function getTransactionData() {
-//     const demand = ['userid', 'currency', 'from', 'to', 'nickname', 'value'];
-//     const url = window.location;
-//     const data = parseURL(url);
-//
-//     demand.forEach((property) => {
-//         if (data[property] === undefined)
-//             throw new Error('URL doesn\'t contain all properties');
-//
-//     });
-//
-//     data.value = data.currency !== 'Ethereum' ? LS.utils.tw(data.value).toNumber() : LS.Ethereum.utils.tw(data.value).toNumber();
-//
-//     return data;
-// }
-
-// /**
-//  * Allows to parse url string
-//  * @param url {Location} windows.location
-//  * @returns {Object}
-//  */
-// function parseURL(url) {
-//     const txID = url.pathname.split('/')[2].split('/')[0];
-//     return txID;
-// }
-
 /**
  * Allows to parse url string
  * @param url {Location} windows.location
@@ -279,4 +314,3 @@ function parseURL(url) {
         throw e;
     }
 }
-

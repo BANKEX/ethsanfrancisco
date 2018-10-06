@@ -1,6 +1,6 @@
 const BL = new Blockchain();
 
-const backendURL = 'http://localhost:3000';
+const backendURL = 'http://exp.bankex.team:3000';
 
 /**
  * Start timer

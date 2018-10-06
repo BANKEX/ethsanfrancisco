@@ -31,9 +31,9 @@ const course = {
      * @returns {Promise<number>}
      */
     convert: async (from, to, value) => {
-        const courses = await course.getCourse(currency[from].ticker);
+        const courses = await course.getCourse(from);
         console.log(courses)
-        const rate = courses[currency[to].ticker];
+        const rate = courses[to];
         const result = value * rate;
         return result * 1000 % 10 === 0 ? result : result.toFixed(2);
     }

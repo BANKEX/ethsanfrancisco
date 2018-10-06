@@ -57,34 +57,46 @@ const sendTransaction = new WizardScene(
         ctx.reply(Text.dialog.sendTransaction["2"]);
         return ctx.wizard.next()
     },  
-    async ctx => { 
+    async ctx => {
+        const currency = ctx.session.currency;
         const amount = ctx.message.text;
         const tickerFrom = currency == 'Ethereum' ? 'ETH' : 'BTC';
         const tickerTo = currency == 'Ethereum' ? 'ETH' : 'BTC';
-        const amountInUSD = utils.course.convert(tickerFrom, tickerTo, amount);
+        const amountInUSD = await utils.course.convert(tickerFrom, "USD", amount);
 
         const key = guid.create().value;
 
         const userTo = ctx.session.to;
-        const currency = ctx.session.currency;
 
         let toUserID;
         let toAddress;
+        let checker = false;
+        let fromAddress;
+
+        const user = await db.user.find.oneByID(ctx.message.from.id);
+        fromAddress = user[`${currency.toLowerCase()}Address`];
 
         if (currency == 'Ethereum' && web3.utils.isAddress(userTo)) {
             toAddress = userTo;
         } else if (currency == 'Bitcoin' && bitcore.Address.isValid(userTo)) {
             toAddress = userTo;
         } else {
-            const user = await db.user.find.oneByID(ctx.session.to);
+            let to = ctx.session.to;
+            if (to.match('@')) {
+                to = to.substring(1);
+            }
+            const user = await db.user.find.oneByNickname(to);
             toUserID = user.userID;
             toAddress = currency == 'Ethereum' ? user.ethereumAddress : user.bitcoinAddress;
+            checker = true;
         }
         
         client.set(key, JSON.stringify({
             currency: currency,
             fromUserID: ctx.message.from.id,
             toUserID: toUserID ? toUserID : 'null',
+            fromAddress: fromAddress,
+            toNickname: checker ? ctx.session.to : '',
             toAddress: toAddress,
             amount: amount,
             amountInUSD: amountInUSD,
