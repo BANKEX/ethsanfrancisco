@@ -22,9 +22,14 @@ const SERVER_URL = (process.env.SERVER_URL) ?
   (process.env.SERVER_URL) :
   config.get('serverURL');
 
+  const BACKEND_PORT = (process.env.BACKEND_PORT) ?
+  (process.env.BACKEND_PORT) :
+  config.get('backendPort');
+
 module.exports = {
     APP_SECRET:APP_SECRET,
     VALIDATION_TOKEN:VALIDATION_TOKEN,
     PAGE_ACCESS_TOKEN:PAGE_ACCESS_TOKEN,
-    SERVER_URL:SERVER_URL
+    SERVER_URL:SERVER_URL,
+    BACKEND_PORT:BACKEND_PORT
 }

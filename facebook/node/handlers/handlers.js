@@ -1,7 +1,7 @@
 
 const
   utils = require('./utils'),
-  dilaog = require('./dialog');
+  dialog = require('./dialog');
 
 
 /*
@@ -89,66 +89,35 @@ function receivedMessage(event) {
       switch (messageText.replace(/[^\w\s]/gi, '').trim().toLowerCase()) {
         case 'hello':
         case 'hi':
-          utils.sendHiMessage(senderID);
-          //sendHiMessage(senderID);
+          dialog.sendStartMenu(senderID);
           break;
-  
-        case 'image':
-            utils.requiresServerURL(utils.sendImageMessage, [senderID]);
+        
+        case 'Main menu':
+          dialog.sendMainMenu(senderID);
           break;
-  
-        case 'gif':
-            utils.requiresServerURL(utils.sendGifMessage, [senderID]);
+        case 'Account':
+          dialog.sendAccount(senderID);
           break;
-  
-        case 'audio':
-            utils.requiresServerURL(utils.sendAudioMessage, [senderID]);
+        case 'Balance':
+          dialog.sendBalance(senderID);
           break;
-  
-        case 'video':
-            utils.requiresServerURL(utils.sendVideoMessage, [senderID]);
+        case 'Adress':
+          dialog.sendAdress(senderID);
           break;
-  
-        case 'file':
-            utils.requiresServerURL(utils.sendFileMessage, [senderID]);
+        case 'Send money':
+          dialog.sendTxCreate(senderID);
           break;
-  
-        case 'button':
-            dialog.sendStartMenu(senderID);
-            //utils.sendButtonMessage(senderID);
+        case 'Send Ethereum':
+          dialog.sendEthereum(senderID);
           break;
-  
-        case 'generic':
-            utils.requiresServerURL(utils.sendGenericMessage, [senderID]);
+        case 'Send Bitcoin':
+          dialog.sendBitcoin(senderID);
           break;
-  
-        case 'receipt':
-            utils.requiresServerURL(utils.sendReceiptMessage, [senderID]);
+        case 'test button':
+          utils.sendButtonMessage(selnderID);
           break;
-  
-        case 'quick reply':
-            utils.sendQuickReply(senderID);
-          break;
-  
-        case 'read receipt':
-            utils.sendReadReceipt(senderID);
-          break;
-  
-        case 'typing on':
-            utils.sendTypingOn(senderID);
-          break;
-  
-        case 'typing off':
-            utils.sendTypingOff(senderID);
-          break;
-  
-        case 'account linking':
-            utils.requiresServerURL(utils.sendAccountLinking, [senderID]);
-          break;
-  
         default:
-
-            utils.sendTextMessage(senderID, messageText);
+            dialog.sendStartMenu(senderID);
       }
     } else if (messageAttachments) {
         utils.sendTextMessage(senderID, "Message with attachment received");
