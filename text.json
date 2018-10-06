@@ -6,6 +6,14 @@
         "1": "🖋 Send money"
       },
       "text": "ℹ️ Main menu"
+    },
+    "account": {
+      "text": "This is your account",
+      "button": {
+        "0": "Addresses",
+        "1": "Balances",
+        "2": "📖 Payment history"
+      }
     }
   },
   "inline_keyboard": {
@@ -29,7 +37,7 @@
       "0": "Choose currency",
       "1": "Enter receiver @nickname or address",
       "2": "Enter amount of currency (10 or 1$)"
-    }
+    },
   },
   "back": "❌ Back"
 }
