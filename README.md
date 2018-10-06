@@ -1,4 +1,7 @@
-RUN
+## About
+This is a node.js app with ..
+
+## Deploy
 
 ```
 docker run --name redis -p 6379:6379 -d redis:alpine
