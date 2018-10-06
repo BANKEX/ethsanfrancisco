@@ -1,6 +1,6 @@
-const LS = new LightySig();
+const BL = new Blockchain();
 
-const backendURL = 'https://afbdd361.ngrok.io';
+const backendURL = 'http://localhost:3000';
 
 /**
  * Start timer
@@ -18,29 +18,29 @@ function startTimer(duration, display) {
 
         display.textContent = minutes + ":" + seconds;
 
-        closeLoader();
+        if (document.getElementById('loader').style.display == '')
+            closeLoader();
 
         if (--timer < 0) {
+            addError('The link was deleted');
             clearInterval(bomb)
-            // window.location.pathname = '/error'
         }
     }, 1000);
 }
 
-window.onload = async function () {
+(async () => {
     const deleteDate = await getLinkLivetime();
     const now = Date.now();
     const difference = Number(deleteDate) - now;
     if (difference <= 0) {
         addError('The link was deleted or not found');
-        // window.location.pathname = '/error';
         throw new Error('Can not get livetime of link');
     }
     const differenceInMinute = difference / 1000 / 60;
     const minutes = 60 * differenceInMinute,
         display = document.querySelector('#time');
     startTimer(minutes, display);
-};
+})();
 
 /**
  * Allows to get livetime of link
@@ -49,17 +49,16 @@ window.onload = async function () {
 async function getLinkLivetime() {
     const link = getShortlink();
     try {
-        const response = await query('GET', `${backendURL}/api/blockchain/create/validator/${link}`);
+        const response = await query('GET', `${backendURL}/guid/lifetime/${link}`);
         console.log(response)
-        if (response.error){
+        if (response.error) {
             addError('Close page and try again');
             return response.error;
         }
-        else
-            return new Date(response.result).getTime();
+
+        return new Date(response.result).getTime();
     } catch (e) {
         addError('The link was deleted or not found');
-        // window.location.pathname = '/error';
         throw new Error('Can not get livetime of link');
     }
 }
@@ -72,37 +71,53 @@ async function generatePicture() {
     const privateKeys = getAllPrivateKeys();
     const addresses = getAllAddresses(privateKeys);
 
-    const password = checkPassword('password', 'error');
+    const password = checkPassword('password1', 'password2', 'error');
+
     if (!password)
         return;
 
     const encrypted = encryptAccount(privateKeys, password);
 
-    const shortlink = getShortlink();
     openLoader();
+
+    const shortlink = getShortlink();
+
     await sendAddresses(addresses, shortlink);
 
-    const addressesText = '<br><b>Waves: </b>' + addresses.Waves + '<br>' +
-        '<b>Ethereum: </b>' + addresses.Ethereum + '<br>' +
-        '<b>Bitcoin: </b>' + addresses.Bitcoin + '<br>' +
-        '<b>BitcoinCash: </b>' + addresses.BitcoinCash + '<br>' +
-        '<b>Litecoin: </b>' + addresses.Litecoin;
-
     document.getElementById('main').innerHTML = `
-        <br>
-        <br>
-        <p id="success"></p>
-        <br>
-        <img id="qr">
-        <br>
-        <p>Your address: <span>${addressesText}</span></p>
-        <br>
-        `;
-
-    addSuccess('Save this QR code. It\'s your access to account');
+        <div class="container text-center">
+            <br>
+            <br>
+            <h1>You are all set! This is your QR code</h1>
+            <br>
+            <h5>Don't loose it or you will loose everything</h5>
+            <br>
+            <br>
+            <img id="qr">
+            <br>
+            <br>
+            <p id="save-qr-code"></p>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <h1>Here you can see your public addresses</h1>
+                <br>
+                <br>
+                <p style="font-size: 22px; word-wrap: break-word">ETH: ${addresses.Ethereum}</p>
+                <p style="font-size: 22px; word-wrap: break-word">BTC: ${addresses.Bitcoin}</p>
+            </div>
+        </div>
+    `;
 
     createQRCode('qr', encrypted);
-    // closeLoader();
+    addSaveButton();
+
+    closeLoader();
 }
 
 /**
@@ -111,14 +126,11 @@ async function generatePicture() {
  * @param shortlink {String} guid
  * @returns {Promise<*>}
  */
-async function sendAddresses(addresses, shortlink) {
-    const queryURL = `${backendURL}/api/blockchain/create/${shortlink}`;
+async function sendAddresses(addresses, guid) {
+    const queryURL = `${backendURL}/create/${guid}`;
     const data = {
         bitcoinAddress: addresses.Bitcoin,
-        bitcoinCashAddress: addresses.BitcoinCash,
         ethereumAddress: addresses.Ethereum,
-        wavesAddress: addresses.Waves,
-        litecoinAddress: addresses.Litecoin
     };
     try {
         const response = await query('PUT', queryURL, JSON.stringify(data));
@@ -148,6 +160,15 @@ function createQRCode(tagForQR, data) {
 }
 
 /**
+ * Add button. Push button and save qr code
+ * @param data
+ */
+function addSaveButton() {
+    const image = document.getElementById('qr');
+    document.getElementById('save-qr-code').innerHTML = `<a href="${image.src}" download="ETHSanFrancisco.png"><button class="btn btn-success">Download</button></a>`;
+}
+
+/**
  * Allows to encrypt user's privateKeys via his password
  * @param privateKeys {Object} user's private keys
  * @param password {String} encryption key
@@ -166,8 +187,9 @@ function encryptAccount(privateKeys, password) {
  * @param errorElemID id of tag with error
  * @returns {boolean} true|false
  */
-function checkPassword(passwordElemID, errorElemID) {
+function checkPassword(passwordElemID, repeatPasswordElemID, errorElemID) {
     const password = document.getElementById(passwordElemID).value;
+    const repeatPassword = document.getElementById(repeatPasswordElemID).value;
 
     const checkObject = {
         0: {
@@ -175,26 +197,34 @@ function checkPassword(passwordElemID, errorElemID) {
             errorMessage: 'Enter password'
         },
         1: {
-            check: password.length > 8,
-            errorMessage: 'Password should be more than 8 characters'
+            check: password.length >= 8,
+            errorMessage: 'Password should be equal or more than 8 characters'
         },
+        // 2: {
+        //     check: RegExp(/(?=.*[!@#$%^&*])/).test(password),
+        //     errorMessage: 'The password must contain special characters'
+        // },
         2: {
-            check: RegExp(/(?=.*[!@#$%^&*])/).test(password),
-            errorMessage: 'The password must contain special characters'
+            check: RegExp(/[0-9]/).test(password),
+            errorMessage: 'The password must contains numbers'
         },
         3: {
             check: RegExp(/(?=.*[a-z])(?=.*[A-Z])/).test(password),
-            errorMessage: 'The password must contain Latin letters of different registers'
+            errorMessage: 'The password must contains Latin letters of different registers'
+        },
+        4: {
+            check: password === repeatPassword,
+            errorMessage: 'Passwords do not match'
         }
     }
 
-    let err = false;
+    let err= false;
     for (let i in checkObject) {
         if (!checkObject[i].check) {
             err = true;
             $(`#${errorElemID}`).text(`${checkObject[i].errorMessage}`);
             break;
-        } else {
+        } {
             $(`#${errorElemID}`).text(``);
         }
     }
@@ -209,7 +239,7 @@ function checkPassword(passwordElemID, errorElemID) {
 function getAllAddresses(privateKeys) {
     const addresses = {};
     for (let currency in privateKeys)
-        addresses[currency] = LS[currency].account.getAddress(privateKeys[currency]);
+        addresses[currency] = BL[currency].account.getAddress(privateKeys[currency]);
     return addresses;
 }
 
@@ -218,23 +248,12 @@ function getAllAddresses(privateKeys) {
  * @returns {{Waves: Object, Ethereum: (string), Bitcoin: (string), BitcoinCash: (string), Litecoin: (string)}}
  */
 function getAllPrivateKeys() {
-    // LS.Litecoin.network.change('mainnet');
-    // LS.BitcoinCash.network.change('mainnet');
-    // LS.Bitcoin.network.change('mainnet');
-    // LS.Waves.network.change('mainnet');
-
-    const waves = LS.Waves.account.create();
-    const ethereum = LS.Ethereum.account.create();
-    const bitcoin = LS.Bitcoin.account.create();
-    const bitcoinCash = LS.BitcoinCash.account.create();
-    const litecoin = LS.Litecoin.account.create();
+    const ethereum = BL.Ethereum.account.create();
+    const bitcoin = BL.Bitcoin.account.create();
 
     return {
-        Waves: waves.phrase,
         Ethereum: ethereum,
         Bitcoin: bitcoin,
-        BitcoinCash: bitcoinCash,
-        Litecoin: litecoin
     }
 }
 
@@ -246,6 +265,7 @@ function getShortlink() {
     const demand = ['create'];
     const url = window.location;
     const urlData = parseURL(url);
+    console.log(urlData)
 
     demand.forEach((property) => {
         if (urlData[property] === undefined)
@@ -268,7 +288,6 @@ function parseURL(url) {
         return paramsObject;
     } catch (e) {
         addError('Can not get user identifier. Please, go back to the bot and try again');
-        // window.location.pathname = '/error';
         throw e;
     }
 }

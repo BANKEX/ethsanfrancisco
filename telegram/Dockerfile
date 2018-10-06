@@ -1,0 +1,24 @@
+FROM node
+
+WORKDIR /app
+
+COPY . .
+
+RUN rm -rf node_modules/
+RUN npm update
+RUN export NODE_PATH=node modules
+RUN npm i
+
+ENV BOT_TOKEN=645333412:AAG7aWv2ncsoZ-E3bbSLCW1bFH9FJPSPmRQ
+ENV URL=exp.bankex.team:27017
+ENV LOGIN=admin
+ENV PASSWORD=ObshiDostup1
+ENV DB=admin
+ENV INFURA_TOKEN=1u84gV2YFYHHTTnh8uVl
+ENV REDIS_HOST=10.7.12.19
+
+EXPOSE 3000
+EXPOSE 6379
+EXPOSE 27017
+
+ENTRYPOINT ["node", "app.js"]

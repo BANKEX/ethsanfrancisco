@@ -1,11 +1,13 @@
-const db = require('./../../db/db');
-require('dotenv').config('./../../');
+const db = require('./../db/db');
+const telegram = require('./../messangers/telegram');
+require('dotenv').config({path: "./../.env"});
 const redis = require("redis"),
     client = redis.createClient({
         host: process.env.REDIS_HOST || '127.0.0.1'
     });
 const {promisify} = require('util');
 const getAsync = promisify(client.get).bind(client);
+const Keyboard = require('./../keyboard/keyboard');
 
 async function createAccount(req, res) {
     const id = req.params.guid;
@@ -15,7 +17,9 @@ async function createAccount(req, res) {
     getAsync(id)
         .then(async value => {
             value = JSON.parse(value);
-            await db.user.create(value.userID, value.nickname, ethereumAddress, bitcoinAddress)
+            await db.user.create(value.userID, value.nickname, ethereumAddress, bitcoinAddress);
+            telegram.sendMessage(value.userID, Keyboard.start, 'ℹ️ Main menu');
+            client.del(id);
             res.send({
                 error: null,
                 result: 'success'
