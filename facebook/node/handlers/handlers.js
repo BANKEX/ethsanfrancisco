@@ -114,7 +114,7 @@ function receivedMessage(event) {
           dialog.sendBitcoin(senderID);
           break;
         case 'test button':
-          utils.sendButtonMessage(selnderID);
+          utils.sendButtonMessage(senderID);
           break;
         default:
             dialog.sendStartMenu(senderID);

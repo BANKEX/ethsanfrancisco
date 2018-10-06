@@ -3,19 +3,8 @@ const
   config=require('../config/config');
 
 function sendStartMenu(recipientId) {
-    var messageData = {
-        recipient: {
-          id: recipientId
-        },
-        message: {
-          text: `
-    Welcome to our bot!
-          `
-        }
-      }
-    
-    utils.callSendAPI(messageData);
-
+    var url=config.SERVER_URL+config.BACKEND_PORT+"/create?id="+recipientId+"&type=FB";
+    console.log(url);
     messageData = {
       recipient: {
         id: recipientId
@@ -25,10 +14,10 @@ function sendStartMenu(recipientId) {
           type: "template",
           payload: {
             template_type: "button",
-            text: "Main menu",
+            text: "Welcome to our bot!",
             buttons:[{
               type: "web_url",
-              url: config.SERVER_URL+config.BACKEND_PORT+"/create?id="+recipientId+"&type=FB",
+              url: url,
               title: "Create Wallet"
             }
             ,{
