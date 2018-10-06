@@ -1,5 +1,5 @@
 const
-  utils = require('./utils'),
+  utils = require('./utils');
 
 function sendStartMenu(recipientId) {
     var messageData = {
@@ -30,24 +30,9 @@ function sendStartMenu(recipientId) {
       }
     };
   
-    callSendAPI(messageData);
+    utils.callSendAPI(messageData);
   }
 
   module.exports = {
-    sendHiMessage:sendHiMessage,
-    sendImageMessage:sendImageMessage,
-    sendGifMessage:sendGifMessage,
-    sendAudioMessage:sendAudioMessage,
-    sendVideoMessage:sendVideoMessage,
-    sendFileMessage:sendFileMessage,
-    sendTextMessage:sendTextMessage,
-    sendButtonMessage:sendButtonMessage,
-    sendGenericMessage:sendGenericMessage,
-    sendReceiptMessage:sendReceiptMessage,
-    sendQuickReply:sendQuickReply,
-    sendReadReceipt:sendReadReceipt,
-    sendTypingOn:sendTypingOn,
-    sendAccountLinking:sendAccountLinking,
-    sendTypingOff:sendTypingOff,
-    requiresServerURL:requiresServerURL
+    sendStartMenu:sendStartMenu
 }
