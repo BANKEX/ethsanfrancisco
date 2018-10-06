@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="src/styles/bootstrap.min.css">
+    <link rel="stylesheet" href="src/styles/custom.css">
+    <title>Lighty - sig</title>
+</head>
+<body id="container">
+<div class="container">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="col-12">
+        <div class='loader'>
+            <div class='loader-container'>
+                <div class="col-12 text-center">
+                    <img style="max-width: 300px" src="src/img/preview.png">
+                </div>
+                <div class="col-12 bg">
+                    <div class="loader-spin" id="loader-4">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div id="main" class="col-12 my-auto">
+            <div class="col-12">
+                <table class="table table-hover table-dark">
+                    <tbody>
+                    <tr>
+                        <th scope="col">Sum</th>
+                        <th id="value" scope="col"></th>
+                    </tr>
+                    </tbody>
+                    <tbody>
+                    <tr>
+                        <th scope="col">Sum in $</th>
+                        <th id="usd-value" scope="col"></th>
+                    </tr>
+                    </tbody>
+                    <tbody>
+                    <tr>
+                        <th scope="col">Currrency</th>
+                        <th id="currency" scope="col"></th>
+                    </tr>
+                    </tbody>
+                    <tbody>
+                    <tr>
+                        <th scope="col">Telegram account</th>
+                        <th id="nickname" scope="col"></th>
+                    </tr>
+                    </tbody>
+                    <tbody>
+                    <tr>
+                        <th scope="col">To</th>
+                        <th id="to" scope="col"></th>
+                    </tr>
+                    </tbody>
+                    <tbody>
+                    <tr>
+                        <th scope="col">From</th>
+                        <th id="from" scope="col"></th>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+            <br>
+            <form>
+                <h2 class="Asker text-center">Upload your QR</h2>
+                <div class="col-12 text-center">
+                    <form method="post" action="#" id="#">
+                        <div class="form-group files">
+                            <input type="file" class="form-control" multiple="">
+                        </div>
+                    </form>
+                </div>
+                <div class="text-center col-12">
+                    <div class="form-group">
+                        <label for="Password"><h2>Enter your password</h2></label>
+                        <input type="password" class="form-control" id="password" placeholder="Password">
+                    </div>
+                    <a class="btn btn-lg btn-warning btn-circle done" onclick="sendTransaction()">Send transaction</a>
+                    <br>
+                    <br>
+                    <p id="error"></p>
+                    <br>
+                    <p id="tx-url"></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div style="display: none" class="alert alert-success col-12" id="Success_pop">
+        <div class="row">
+            <div class="col-10">
+                <h2>Success</h2>
+                <h5>You are done</h5>
+            </div>
+            <div class="col-2">
+                <button type="button" class="close" onclick="CloseAlert(1)">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--<script src="src/js/utils/jquery3.2.1.min.js"></script>-->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+
+<script src="./src/js/UI.js"></script>
+
+<script src="./src/js/utils/bower_components/crypto-js/crypto-js.js"></script>
+<script src="./src/js/utils/qcode-decoder.min.js"></script>
+<script src="./src/js/utils/qcode-decoder.min.js.map"></script>
+<script src="./src/js/index.js"></script>
+
+<script src="src/js/utils/popper.min.js"></script>
+<script src="src/js/utils/bootstrap.min.js"></script>
+</body>
+</html>
