@@ -488,5 +488,6 @@ function callSendAPI(messageData) {
         sendTypingOn:sendTypingOn,
         sendAccountLinking:sendAccountLinking,
         sendTypingOff:sendTypingOff,
-        requiresServerURL:requiresServerURL
+        requiresServerURL:requiresServerURL,
+        callSendAPI:callSendAPI
 }
