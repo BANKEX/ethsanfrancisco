@@ -6,6 +6,13 @@ class Blockchain {
     }
 }
 
+/**
+ * Convert Number to BigNumber
+ * @param x Some number
+ * @returns {*} BigNumber
+ */
+const tbn = (x) => new BigNumber(x);
+
 const _Ethereum = {
     /**
      * Allows to change RPC url. Default: http://localhost:8545/

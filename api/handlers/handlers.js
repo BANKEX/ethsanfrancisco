@@ -80,10 +80,16 @@ async function getTransaction(req,res) {
     getAsync(id)
         .then(value => {
             console.log(value)
-            res.send({
-                error: null,
-                result: JSON.parse(value)
-            });
+            if (value != null)
+                res.send({
+                    error: null,
+                    result: JSON.parse(value)
+                });
+            else
+                res.send({
+                    error: 'Deleted',
+                    result: null
+                });
         })
         .catch(e => {
             res.send({
