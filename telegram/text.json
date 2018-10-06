@@ -28,7 +28,7 @@
       "text": "Tap button to sign and send transaction",
       "0": {
         "button": "🖋 Send money",
-        "callback": "https://google.com"
+        "callback": "http://127.0.0.1:3002/send/?tx="
       }
     }
   },

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-// require('dotenv').config({path: "./../.env"});
+require('dotenv').config({path: "./../.env"});
 const userName = process.env.LOGIN;
 const password = process.env.PASSWORD;
 const url = process.env.URL;

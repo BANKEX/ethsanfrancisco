@@ -6,7 +6,7 @@ const Stage = require("telegraf/stage");
 
 const stage = new Stage();
 
-// require('dotenv').config({path: "../.env"});
+require('dotenv').config({path: "../.env"});
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 

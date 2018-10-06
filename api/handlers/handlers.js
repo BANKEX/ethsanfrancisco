@@ -74,9 +74,29 @@ async function getGuidLifetime(req, res) {
         });
 }
 
+async function getTransaction(req,res) {
+    const id = req.params.guid;
+
+    getAsync(id)
+        .then(value => {
+            console.log(value)
+            res.send({
+                error: null,
+                result: JSON.parse(value)
+            });
+        })
+        .catch(e => {
+            res.send({
+                error: e.message,
+                result: null
+            });
+        });
+}
+
 module.exports = {
     createAccount: createAccount,
     createTransaction: createTransaction,
-    getGuidLifetime: getGuidLifetime
+    getGuidLifetime: getGuidLifetime,
+    getTransaction: getTransaction
 }
 

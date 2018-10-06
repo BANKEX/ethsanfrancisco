@@ -28,6 +28,16 @@ const user = {
                 });
             });
         },
+        oneByNickname: (nickname) => {
+            console.log(nickname)
+            return new Promise((resolve, reject) => {
+                User.find({nickname: new RegExp(nickname)}, (err, doc) => {
+                    if (err)
+                        reject(err);
+                    resolve(doc[0]);
+                });
+            })
+        }
     },
     update: {
         addresses: (userID, ethereumAddress, bitcoinAddress) => {
