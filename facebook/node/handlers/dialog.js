@@ -1,5 +1,5 @@
 const
-  utils = require('./utils'),
+  utils =require('./utils'),
   config=require('../config/config');
 
 function sendStartMenu(recipientId) {
