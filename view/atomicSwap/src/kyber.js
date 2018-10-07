@@ -98,7 +98,7 @@ const swapEtherToToken = async (tokenAddress, etherSum) => {
     const serializedTx = tx.serialize();
     // console.log('0x' + serializedTx.toString('hex'));
     const result = await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), (err, doc) => {
-        console.log(err, doc)
+        return doc;
     });
 };
 
@@ -130,7 +130,7 @@ const swapTokenToToken = async (tokenDestination, destinationAmount, targetToken
     const serializedTx = tx.serialize();
     // console.log('0x' + serializedTx.toString('hex'));
     const result = await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), (err, doc) => {
-        console.log(err, doc)
+        return doc;
     });
 };
 
@@ -163,7 +163,7 @@ const swapTokenToEther = async (tokenDestination, destinationAmount) => {
         const serializedTx = tx.serialize();
         // console.log('0x' + serializedTx.toString('hex'));
         const result = await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), (err, doc) => {
-            console.log(err, doc)
+            return doc;
         });
     }
     else {
@@ -318,14 +318,17 @@ async function sendTransaction() {
 
         userAddress = _Ethereum.account.getAddress(pvk);
 
+        let txHash;
+
         if (type == 'tt') {
-            swapTokenToToken(first, amount, second);
+            txHash = await swapTokenToToken(first, amount, second);
         } else if (type == 'te') {
-            swapTokenToEther(first, amount);
+            txHash = await swapTokenToEther(first, amount);
         } else if (type == 'et') {
-            swapEtherToToken(first, amount);
+            txHash = await swapEtherToToken(first, amount);
         }
 
+        setTransactionURL('Ethereum', 'testnet', txHash);
     // if (isToken != true) {
     //     setTransactionURL(currency, 'testnet', transactionHash);
     // } else {
@@ -335,7 +338,7 @@ async function sendTransaction() {
     // const response = await sendTransactionDataToServer(transactionHash);
 
     closeLoader();
-        alert('Great!')
+        // alert('Great!')
 } catch (e) {
     addHint(e.message);
 }
