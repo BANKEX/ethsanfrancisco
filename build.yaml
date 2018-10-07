@@ -27,18 +27,7 @@ services:
         condition: on-failure
     networks:
     - webnet
-
-  sendtx:
-    image: krboktv/esendtx
-    ports:
-    - "3002:3002"
-    deploy:
-      replicas: 3
-      resources:
-        limits:
-          cpus: "0.3"
-          memory: 115M
-      restart_policy:
+    
  sendtx:
     image: krboktv/esendtx
     ports:
