@@ -43,7 +43,7 @@ services:
     networks:
     - webnet
     
- swap:
+  swap:
     image: krboktv/eswap
     ports:
     - "3003:3003"
