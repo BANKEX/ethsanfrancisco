@@ -108,8 +108,8 @@ function sendStartMenu(recipientId) {
               text: "Account",
               buttons:[{
                   type: "postback",
-                  title: "Adress",
-                  payload: "Adress"
+                  title: "Address",
+                  payload: "Address"
                 }
               ,{
                  type: "postback",
@@ -127,7 +127,7 @@ function sendStartMenu(recipientId) {
 
 function sendBalance(recipientId) {
   const user = db.user.find.oneByID(recipientId);
-    const balanceETH = web3.eth.getBalance(user.ethereumAddress);
+    const balanceETH = 0;//web3.eth.getBalance(user.ethereumAddress);
 
     const btcURL = `https://testnet.blockexplorer.com/api/addr/${user.bitcoinAddress}`;
 

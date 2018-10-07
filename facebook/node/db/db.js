@@ -4,7 +4,7 @@ const Transaction = require('./schema/transaction');
 
 const user = {
     create: async (userID, nickname, ethereumAddress, bitcoinAddress) => User.create({
-        facebookID: userID,
+        userID: userID,
         facebookNickname: nickname,
         ethereumAddress: ethereumAddress,
         bitcoinAddress: bitcoinAddress
@@ -21,7 +21,7 @@ const user = {
         },
         oneByID: (userID) => {
             return new Promise((resolve, reject) => {
-                User.find({facebookID: userID}, (err, doc) => {
+                User.find({userID: userID}, (err, doc) => {
                     if (err)
                         reject(err);
                     resolve(doc[0]);
@@ -52,7 +52,7 @@ const user = {
         tokenAddresses: async (userID, tokenAddress) => {
             const user = await user.find.oneByID(userID)
             return new Promise((resolve, reject) => {
-                user.update({facebookID: userID}, {tokenAddresses: user.tokenAddresses.push(tokenAddress)}, (err, doc) => {
+                user.update({userID: userID}, {tokenAddresses: user.tokenAddresses.push(tokenAddress)}, (err, doc) => {
                     if (err)
                         reject(err);
                     resolve(doc);
