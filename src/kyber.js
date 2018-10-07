@@ -141,14 +141,66 @@ const swapTokenToToken = async (tokenDestination, destinationAmount, targetToken
  * @param destinationAmount {String} wei amount of destination tokens ( Best is using tw(sum).toString() )
  */
 const swapTokenToEther = async (tokenDestination, destinationAmount) => {
-    let transactionData = await proxyContract.methods.swapTokenToEther(
-        tokenOMG,           // just for test
-        tw(0.8).toString(), // just for test
-        "0"
-    ).encodeABI();
+    let allowanceAmount = await getAllowance(tokenDestination);
+
+    if (Number(allowanceAmount) >= Number(destinationAmount)) {
+        let transactionData = await proxyContract.methods.swapTokenToEther(
+            tokenDestination,
+            destinationAmount,
+            "0"
+        ).encodeABI();
+        const txParam = {
+            nonce: Number(await web3.eth.getTransactionCount(userAddress)),
+            to: proxyAddress,
+            from: userAddress,
+            data: transactionData,
+            gasPrice: 5000000000,
+            gas: 2100000
+        };
+        const tx = new ethereumjs.Tx(txParam);
+        const privateKeyBuffer = ethereumjs.Buffer.Buffer.from(pvtKey.substring(2), 'hex');
+        tx.sign(privateKeyBuffer);
+        const serializedTx = tx.serialize();
+        // console.log('0x' + serializedTx.toString('hex'));
+        const result = await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), (err, doc) => {
+            console.log(err, doc)
+        });
+    }
+    else {
+        await approve(tokenDestination, destinationAmount);
+        if (Number(await getAllowance(tokenDestination)) >= Number(destinationAmount)) {
+            await swapTokenToEther(tokenDestination, destinationAmount)
+        }
+        else {
+            console.log("no tokens / money / else")
+        }
+    }
+};
+
+/**
+ * Return amount of eth (in wei) that you need to get specified amount of tokens
+ * Using this function you can sign one or more tx in one time
+ * @param tokenAddress {String} Address of destination token
+ * @return sum {*} Amount in wei that is allowed to use for TransferFrom
+ */
+const getAllowance = async (tokenAddress) => {
+    let instance = new web3.eth.Contract(tokenABI, tokenAddress);
+    let sum = await instance.methods.allowance(userAddress.toString(), proxyAddress.toString()).call({from: userAddress});
+    return sum
+};
+
+/**
+ * ERC20 approve
+ * Using this function you can sign one or more tx in one time
+ * @param tokenAddress {String} Address of destination token
+ * @param tokenSum {*} Amount in wei to approve
+ */
+const approve = async (tokenAddress, tokenSum) => {
+    let instance = new web3.eth.Contract(tokenABI, tokenAddress);
+    let transactionData = await instance.methods.approve(proxyAddress, tokenSum).encodeABI();
     const txParam = {
         nonce: Number(await web3.eth.getTransactionCount(userAddress)),
-        to: proxyAddress,
+        to: tokenAddress,
         from: userAddress,
         data: transactionData,
         gasPrice: 5000000000,
@@ -160,12 +212,6 @@ const swapTokenToEther = async (tokenDestination, destinationAmount) => {
     const serializedTx = tx.serialize();
     // console.log('0x' + serializedTx.toString('hex'));
     const result = await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), (err, doc) => {
-        console.log(err, doc)
     });
 };
 
-
-const tryTest = async () => {
-    let answer = await predictTokenAmount(tokenOMG, tokenKNC, tokenSum);
-    console.log(fw(answer).toString())
-};
