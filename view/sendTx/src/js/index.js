@@ -82,13 +82,13 @@ async function sendTransaction() {
         const transactionData = await getTransactionData();
         let {
             currency,
-            to,
-            value,
+            toAddress,
+            amount,
         } = transactionData;
 
-        value = currency !== 'Ethereum' ? BL.utils.tw(value).toNumber() : BL.Ethereum.utils.tw(value).toNumber();
+        amount = currency !== 'Ethereum' ? BL.utils.tw(amount).toNumber() : BL.Ethereum.utils.tw(amount).toNumber();
 
-        const rawtx = await BL[currency].transactions.signTransaction(decryptedData[currency], to, value);
+        const rawtx = await BL[currency].transactions.signTransaction(decryptedData[currency], toAddress, amount);
         console.log(rawtx)
 
         let txHash;

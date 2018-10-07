@@ -1,5 +1,6 @@
 const Markup = require('telegraf/markup');
 const Extra = require('telegraf/extra');
+const rp = require('request-promise');
 const Web3 = require('web3');
 const guid = require('guid');
 const redis = require("redis");
@@ -127,11 +128,29 @@ function back(ctx) {
     start(ctx);
 }
 
+async function getBalances(ctx) {
+    const user = await db.user.find.oneByID(ctx.message.from.id);
+    const balanceETH = web3.eth.getBalance(user.ethereumAddress);
+
+    const btcURL = `https://testnet.blockexplorer.com/api/addr/${user.bitcoinAddress}`;
+
+    const balanceBTC = await rp({
+        method: 'GET',
+        uri: btcURL,
+        json: true
+    });
+
+    const msg = `Ethereum balance: ${balanceETH.toString()/1e8}\n\nBitcoin balance: ${balanceBTC.balance}`;
+
+    ctx.reply(msg);
+}
+
 module.exports = {
     start: start,
     createAccount: createAccount,
     sendTransaction: sendTransaction,
     getAddresses: getAddresses,
     goToAccount: goToAccount,
+    getBalances: getBalances,
     back: back
 }

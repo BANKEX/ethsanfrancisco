@@ -42,6 +42,15 @@ async function createTransaction(req, res) {
             value = JSON.parse(value);
             
             await db.transaction.create(value.currency, value.fromUserID, value.toUserID, value.toAddress, value.amount, value.amountInUSD, txHash);
+            const userFrom = await db.user.find.oneByID(value.fromUserID);
+            try {
+                const msg = `*${userFrom.nickname}* send you ${value.amount} ${value.currency}`;
+                telegram.sendMessage(value.toUserID, Keyboard.start, msg);
+            } catch (e) {
+
+            }
+
+            client.del(id);
 
             res.send({
                 error: null,

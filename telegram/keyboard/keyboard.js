@@ -10,7 +10,6 @@ const start = [
 const account = [
     [Text.keyboard.account.button["0"]],
     [Text.keyboard.account.button["1"]],
-    [Text.keyboard.account.button["2"]],
     [Text.back]
 ];
 

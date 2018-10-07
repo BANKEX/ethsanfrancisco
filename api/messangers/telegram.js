@@ -8,7 +8,7 @@ const sendMessage = (userID, keyboard, text) => {
         body: {
             'chat_id': userID,
             'text': text,
-            'parse_mode': 'HTML',
+            'parse_mode': 'Markdown',
             'reply_markup': JSON.stringify({
                 "keyboard": keyboard,
                 "resize_keyboard": true,

@@ -18,6 +18,7 @@ bot.start((ctx) => Handlers.start(ctx));
 bot.hears(Text.keyboard.start.button["0"], (ctx) => Handlers.goToAccount(ctx));
 bot.hears(Text.keyboard.start.button["1"], (ctx) => ctx.scene.enter("sendTransaction"));
 bot.hears(Text.keyboard.account.button["0"], (ctx) => Handlers.getAddresses(ctx));
+bot.hears(Text.keyboard.account.button["1"], (ctx) => Handlers.getBalances(ctx));
 bot.hears(Text.back, (ctx) => Handlers.back(ctx));
 
 stage.register(Handlers.sendTransaction);

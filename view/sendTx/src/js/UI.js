@@ -12,11 +12,11 @@ function CloseAlert(arg) {
 }
 
 function openLoader() {
-    $(".loader").show();
+    document.getElementById('loader').style.display = 'block';
 }
 
 function closeLoader() {
-    $(".loader").hide();
+    document.getElementById('loader').style.display = 'none';
 }
 
 function addError(errorText) {
@@ -37,7 +37,7 @@ function addError(errorText) {
 }
 
 function addHint(errorText) {
-    document.getElementById('container').innerHTML += ` 
+    document.getElementById('error').innerHTML = ` 
     <div class="alert alert-danger col-12" id="Error_pop">
         <div class="row">
             <div class="col-10">
@@ -51,4 +51,23 @@ function addHint(errorText) {
             </div>
         </div>
     </div>`;
+}
+
+function addSuccess(successText) {
+    // CloseAlert(0);
+    document.getElementById('success').innerHTML = `
+    <div class="alert alert-success col-12" id="Success_pop">
+        <div class="row">
+            <div class="col-10">
+                <h2>Success</h2>
+                <h5 style="word-wrap: break-word;">${successText}</h5>
+            </div>
+            <div class="col-2">
+                <button type="button" class="close" onclick="CloseAlert(1)">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    `;
 }
