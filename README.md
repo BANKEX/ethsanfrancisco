@@ -1,4 +1,6 @@
 ## About
+### Sign transactions and make atomic swaps in messenger!
+### Do it secure and UI / UX friendly
 We believe that UI/UX friendly solution can change the way how people will use cryptocurrencies. We are trying to make new ways to show user a process of making their private keys (in UX way,  not making our own cryptography of course). We spent a lot of time in Universities where we have a course for students (Soldity and Web3). So, we spent a lot of time explaining people how works digital signature, how to send transactions and e.t.c. 
 
 We think that the main UI/UX issue for Ethereum and other project is holding private keys and sign transactions. - It's not intuitive and we can't make it on backend because it's not decentralized and trustable.

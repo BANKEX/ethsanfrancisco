@@ -110,28 +110,42 @@ const swapEtherToToken = async (tokenAddress, etherSum) => {
  * @param targetToken {String} Address of target token
  */
 const swapTokenToToken = async (tokenDestination, destinationAmount, targetToken) => {
-    let transactionData = await proxyContract.methods.swapTokenToToken(
-        tokenDestination,
-        destinationAmount,
-        targetToken,
-        "0"
-    ).encodeABI();
-    const txParam = {
-        nonce: Number(await web3.eth.getTransactionCount(userAddress)),
-        to: proxyAddress,
-        from: userAddress,
-        data: transactionData,
-        gasPrice: 5000000000,
-        gas: 2100000
-    };
-    const tx = new ethereumjs.Tx(txParam);
-    const privateKeyBuffer = ethereumjs.Buffer.Buffer.from(pvtKey.substring(2), 'hex');
-    tx.sign(privateKeyBuffer);
-    const serializedTx = tx.serialize();
-    // console.log('0x' + serializedTx.toString('hex'));
-    const result = await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), (err, doc) => {
-        return doc;
-    });
+    let allowanceAmount = await getAllowance(tokenDestination);
+
+    if (Number(allowanceAmount) >= Number(destinationAmount)) {
+
+
+        let transactionData = await proxyContract.methods.swapTokenToToken(
+            tokenDestination,
+            destinationAmount,
+            targetToken,
+            "0"
+        ).encodeABI();
+        const txParam = {
+            nonce: Number(await web3.eth.getTransactionCount(userAddress)),
+            to: proxyAddress,
+            from: userAddress,
+            data: transactionData,
+            gasPrice: 5000000000,
+            gas: 2100000
+        };
+        const tx = new ethereumjs.Tx(txParam);
+        const privateKeyBuffer = ethereumjs.Buffer.Buffer.from(pvtKey.substring(2), 'hex');
+        tx.sign(privateKeyBuffer);
+        const serializedTx = tx.serialize();
+        // console.log('0x' + serializedTx.toString('hex'));
+        const result = await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), (err, doc) => {
+            return doc;
+        });
+    } else {
+        await approve(tokenDestination, destinationAmount);
+        if (Number(await getAllowance(tokenDestination)) >= Number(destinationAmount)) {
+            await swapTokenToToken(tokenDestination, destinationAmount, targetToken)
+        }
+        else {
+            console.log("no tokens / money / else")
+        }
+    }
 };
 
 /**
