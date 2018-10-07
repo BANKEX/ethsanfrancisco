@@ -98,7 +98,7 @@ function sendBalance(recipientId) {
     utils.sendTextMessage(recipientId, "balance");
 }
 
-function sendAdress(recipientId) {
+function sendAddress(recipientId) {
     utils.sendTextMessage(recipientId, "adress");
 }
 
@@ -145,7 +145,7 @@ function sendBitcoin(recipientId) {
     sendMainMenu:sendMainMenu,
     sendAccount:sendAccount,
     sendBalance:sendBalance,
-    sendAdress:sendAdress,
+    sendAddress:sendAddress,
     sendTxCreate:sendTxCreate,
     sendBitcoin:sendBitcoin,
     sendEthereum:sendEthereum

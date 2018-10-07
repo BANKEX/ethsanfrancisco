@@ -99,8 +99,8 @@ function receivedMessage(event) {
         case 'balance':
           dialog.sendBalance(senderID);
           break;
-        case 'adress':
-          dialog.sendAdress(senderID);
+        case 'address':
+          dialog.sendAddress(senderID);
           break;
         case 'send money':
           dialog.sendTxCreate(senderID);
