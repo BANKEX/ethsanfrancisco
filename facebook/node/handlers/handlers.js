@@ -105,10 +105,10 @@ function receivedMessage(event) {
         case 'send money':
           dialog.sendTxCreate(senderID);
           break;
-        case 'send Ethereum':
+        case 'Ethereum':
           dialog.sendEthereum(senderID);
           break;
-        case 'send Bitcoin':
+        case 'Bitcoin':
           dialog.sendBitcoin(senderID);
           break;
         case messageText.includes("Eth 0x"):
