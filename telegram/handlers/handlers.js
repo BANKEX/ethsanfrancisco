@@ -10,6 +10,7 @@ const Keyboard = require('./../keyboard/keyboard');
 const Text = require('./../text');
 const db = require('./../db/db');
 const utils = require('./../utils/utils');
+const token = require('./../tokens/tokens');
 
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://rinkeby.infura.io/${process.env.INFURA_TOKEN}`));
 const client = redis.createClient({
@@ -169,7 +170,14 @@ async function getBalances(ctx) {
         json: true
     });
 
-    const msg = `Ethereum balance: ${balanceETH/1e18}\n\nBitcoin balance: ${balanceBTC.balance}`;
+    let msg = `Ethereum balance: ${balanceETH/1e18}\n\nBitcoin balance: ${balanceBTC.balance}`;
+
+    const tokens = user.tokenAddresses;
+
+    for (let i in tokens) {
+        const balance = await token.getBalance(user.ethereumAddress);
+        msg += `\n\n${i} balance: ${balance/1e18}`;
+    }
 
     ctx.reply(msg);
 }
