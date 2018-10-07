@@ -9,68 +9,26 @@ function sendStartMenu(recipientId) {
       recipient: {
         id: recipientId
       },
-      message: {
-        
-            "text": "Welcome to our bot!",
-            "quick_replies":[
-                {
-                    "content_type":"text",
-                    "title":"Create Wallet",
-                    "payload":{
-                        type: "web_url",
-                        url: "https://www.oculus.com/en-us/rift/",
-                        title: "Open Web URL"
-                      }
-                  },
-                  {
-                    "content_type":"text",
-                    "title":"Main menu",
-                    "payload":{
-                        sender: {
-                            id: recipientId
-                          },
-                          recipient: {
-                            id: "924376671084405"
-                          },
-                        recipient: {
-                          id: recipientId
-                        },
-                        message: {
-                            text: "Main menu"
-                        }
-                    }
-                  }
-            ]
-          
-        // attachment: {
-        //   type: "template",
-        //   payload: {
-        //     template_type: "button",
-        //     text: "Welcome to our bot!",
-        //     buttons:[{
-        //       type: "web_url",
-        //       url: url,
-        //       title: "Create Wallet"
-        //     }
-        //     ,{
-        //        type: "postback",
-        //        title: "Main menu",
-        //        payload: {
-        //         "template_type":"generic",
-        //         "elements":[
-        //             {
-        //                 message: {
-        //                     text: messageText,
-        //                     metadata: "DEVELOPER_DEFINED_METADATA"
-        //               }
-        //             }
-        //         ]
-        //       }
-        //      }
-        //     ]
-        //   }
-        // }
-      }
+      message: {  
+        attachment: {
+          type: "template",
+          payload: {
+            template_type: "button",
+            text: "Welcome to our bot!",
+            buttons:[{
+              type: "web_url",
+              url: url,
+              title: "Create Wallet"
+            }
+            ,{
+               type: "postback",
+               title: "Main menu",
+               payload: "Call main menu"
+            }]
+            }
+          }
+        }
+      
     };
   
     utils.callSendAPI(messageData);
