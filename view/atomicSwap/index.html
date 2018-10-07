@@ -27,7 +27,7 @@
 <!--</div>-->
 <!--</div>-->
 
-<div class="container">
+<div class="container" id="container">
     <br>
     <br>
     <br>
@@ -37,7 +37,7 @@
         <div class='loader' id="loader">
             <div class='loader-container'>
                 <div class="col-12 text-center">
-                    <img style="max-width: 300px" src="src/img/preview.png">
+                    <img style="max-width: 300px" src="img/preview.png">
                 </div>
                 <div class="col-12 bg">
                     <div class="loader-spin" id="loader-4">
@@ -111,7 +111,7 @@
                     <!--                                                           swapEtherToToken(2 args) / swapTokenToToken(3 args) / swapTokenToEther(2 args)  you need to put user address and user private key to config.js or refactor
                                                                                    just change function here (if swap to tokens = > tokens) and change config which token and what sum (in string but bn)
                     -->
-                    <a class="btn btn-lg btn-warning btn-circle done" onclick="swapEtherToToken('0x659c4206b2ee8CC00af837CddA132eb30fA58df8', '100000000000000000')">Send transaction</a>
+                    <a class="btn btn-lg btn-warning btn-circle done" onclick="sendTransaction()">Send transaction</a>
                     <br>
                     <br>
                 </div>
@@ -144,9 +144,19 @@
 <script src="src/utils/bignumber.js"></script>
 <script src="src/utils/keythereum.js"></script>
 <script src="src/utils/ethertx.js"></script>
+
+<script src="./src/utils/bower_components/crypto-js/crypto-js.js"></script>
+<script src="./src/utils/qcode-decoder.min.js"></script>
+<script src="./src/utils/qcode-decoder.min.js.map"></script>
+<script src="./src/utils/bitcore-lib.js"></script>
+
 <script src="src/utils/utils.js"></script>
+<script src="src/blockchain.js"></script>
 <script src="src/config/config.js"></script>
 <script src="src/smartContract.js"></script>
+
+
+
 
 <script src="src/kyber.js"></script>
 </body>

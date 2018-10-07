@@ -304,7 +304,7 @@ async function sendTransaction() {
             type
         } = transactionData;
 
-        let transactionHash;
+        // let transactionHash;
 
         amount = BL.Ethereum.utils.tw(amount).toNumber();
 
@@ -312,15 +312,7 @@ async function sendTransaction() {
 
         pvtKey = pvk;
 
-        function getAddress(privateKey) {
-                let _privateKey = "";
-                for (let i = 2; i < privateKey.length; i++) {
-                    _privateKey += privateKey[i];
-                }
-                return keythereum.privateKeyToAddress(_privateKey);
-        }
-
-        userAddress = getAddress(pvk);
+        userAddress = _Ethereum.account.getAddress(pvk);
 
         if (type == 'tt') {
             swapTokenToToken(first, amount, second);

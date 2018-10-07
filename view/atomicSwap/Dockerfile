@@ -6,7 +6,7 @@ COPY . .
 
 RUN npm install
 
-WORKDIR /app/view/createAccount/src/js/utils
+WORKDIR /app/src/utils
 
 RUN npm install -g bower
 RUN bower --allow-root install crypto-js
