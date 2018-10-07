@@ -54,15 +54,18 @@ const sendTransaction = new WizardScene(
     ctx=> {
         if (ctx.message.text == 'token') {
             ctx.session.isToken = true;
-            ctx.reply(Text.dialog.sendTransaction["4"]);
+            // ctx.reply(Text.dialog.sendTransaction["4"]);
+            ctx.reply(Text.inline_keyboard.sendTransaction.token.text, Keyboard.token);
         } else {
             ctx.session.isToken = false;
-            ctx.reply(Text.dialog.sendTransaction["1"]);
+            // ctx.reply(Text.dialog.sendTransaction["1"]);
+            ctx.reply(Text.inline_keyboard.sendTransaction.currency.text, Keyboard.currency);
         }
         return ctx.wizard.next()
     },
     ctx => {
-        ctx.session.currency = ctx.message.text;
+        console.log(ctx.update.callback_query.data)
+        ctx.session.currency = ctx.update.callback_query.data;
         ctx.reply(Text.dialog.sendTransaction["2"]);
         return ctx.wizard.next()
     },
@@ -126,9 +129,11 @@ const sendTransaction = new WizardScene(
 
         return ctx.reply(Text.inline_keyboard.send_transaction.text, Extra.markup(Keyboard.create_transaction(key)));
 
-        ctx.scene.leave()
-    },
-)
+        ctx.scene.leave();
+    }
+);
+
+
 
 const addToken = new WizardScene(
         "addToken", ctx=> {

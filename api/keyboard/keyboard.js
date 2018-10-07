@@ -1,6 +1,6 @@
 const start = [
     ['👤 Account'],
-    ['🖋 Send money'],
+    ['🖋 Send'],
     ['➕ Add token address']
 ];
 
