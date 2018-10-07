@@ -9,13 +9,13 @@ const
 function sendStartMenu(recipientId) {
 
   const user = db.user.find.oneByID(recipientId);
-  console.log(user);
-  if (user)
-  {
-    console.log("found account");
-     sendMainMenu(recipientId);
-  }
-  else
+  // console.log(user);
+  // if (user)
+  // {
+  //   console.log("found account");
+  //    sendMainMenu(recipientId);
+  // }
+  // else
   {
     console.log("new account");
      createAccount(recipientId);
@@ -29,7 +29,7 @@ function sendStartMenu(recipientId) {
     const key = guid.create().value;
     
     client.set(key, JSON.stringify({
-        facebookID: recipientId,
+        userID: recipientId,
         //facebookNickname: ctx.message.from.username,
         lifetime: Date.now() + (keyLifeTime * 1000)
     }), 'EX', keyLifeTime);
