@@ -3,5 +3,11 @@
     "pageAccessToken": "EAADuyMVQrv0BAOFqfyU6hkiWmwZBmjC0gDlcFUzacNMnOqbZAzbP7AU9kVnVFveSwKCwalmSU6YZCZCXEECTZB4XMtQDqliaIHc4F2rdbz1LoNiYdnPlroZB2WppR2TRBohvh8FZChklDTEAGUCULlfLhZCjIX1LHZBnjfZBXM403ZBZBdhH3gPGI0LN",
     "validationToken": "TOKEN",
     "serverURL": "exp.bankex.team",
-    "backendPort":3001 
+    "backendPort":3001,
+    "dbLogin":"admin",
+    "dbPassword":"ObshiDostup1",
+    "dbUrl":"exp.bankex.team:27017",
+    "dbName":"facebot",
+    "infuraToken":"1u84gV2YFYHHTTnh8uVl",
+    "redisHost":"10.7.12.19"
 }

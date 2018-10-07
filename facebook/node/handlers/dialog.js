@@ -1,8 +1,33 @@
 const
   utils =require('./utils'),
-  config=require('../config/config');
-
+  config=require('../config/config'),
+  db = require('../db/db');
+ web3 = new Web3(new Web3.providers.HttpProvider(`https://rinkeby.infura.io/${config.INFURA_TOKEN}`));
+ const client = redis.createClient({
+  host: config.REDIS_HOST || '127.0.0.1'
+});
 function sendStartMenu(recipientId) {
+
+  const user = db.user.find.oneByID(recipientId);
+    
+  if (user)
+     sendMainMenu(recipientId);
+  else
+     createAccount(recipientId);
+  }
+
+
+
+  function createAccount(recipientId) {
+    const key = guid.create().value;
+    
+    client.set(key, JSON.stringify({
+        facebookID: recipientId,
+        //facebookNickname: ctx.message.from.username,
+        lifetime: Date.now() + (keyLifeTime * 1000)
+    }), 'EX', keyLifeTime);
+    console.log(key);
+
     var url=config.SERVER_URL+config.BACKEND_PORT+"/create?create="+recipientId+"&type=FB";
     console.log(url);
     messageData = {
@@ -19,11 +44,6 @@ function sendStartMenu(recipientId) {
               type: "web_url",
               url: url,
               title: "Create Wallet"
-            }
-            ,{
-               type: "postback",
-               title: "Main menu",
-               payload: "Call main menu"
             }]
             }
           }
@@ -32,7 +52,7 @@ function sendStartMenu(recipientId) {
     };
   
     utils.callSendAPI(messageData);
-  }
+}
 
   function sendMainMenu(recipientId) {
     messageData = {
@@ -95,11 +115,30 @@ function sendStartMenu(recipientId) {
 }
 
 function sendBalance(recipientId) {
-    utils.sendTextMessage(recipientId, "balance");
+    const user = db.user.find.oneByID(recipientId);
+    const text = `Ethereum address: \`\`\`${user.ethereumAddress}\`\`\`\n\nBitcoin address: \`\`\`${user.bitcoinAddress}\`\`\``;
+    //return ctx.reply(text, { parse_mode: 'Markdown' });
+
+    utils.sendTextMessage(recipientId, text);
 }
 
 function sendAddress(recipientId) {
-    utils.sendTextMessage(recipientId, "adress");
+    const user = db.user.find.oneByID(recipientId);
+    const balanceETH = web3.eth.getBalance(user.ethereumAddress);
+
+    const btcURL = `https://testnet.blockexplorer.com/api/addr/${user.bitcoinAddress}`;
+
+    const balanceBTC = rp({
+        method: 'GET',
+        uri: btcURL,
+        json: true
+    });
+
+    const msg = `Ethereum balance: ${balanceETH/1e18}\n\nBitcoin balance: ${balanceBTC.balance}`;
+
+    //ctx.reply(msg);
+
+    utils.sendTextMessage(recipientId, msg);
 }
 
 function sendTxCreate(recipientId) {
