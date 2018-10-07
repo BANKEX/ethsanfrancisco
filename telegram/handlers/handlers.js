@@ -189,7 +189,8 @@ const atomicSwap = new WizardScene(
             second: second,
             type: type,
             amount: amount,
-            nickname: ctx.message.from.username
+            nickname: ctx.message.from.username,
+            lifetime: Date.now() + (keyLifeTime * 1000)
         }), 'EX', keyLifeTime);
 
         return ctx.reply(Text.inline_keyboard.swap_utl.text, Extra.markup(Keyboard.create_atomic_swap(key)));
