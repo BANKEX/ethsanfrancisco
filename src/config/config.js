@@ -3,7 +3,7 @@ const proxyAddress = "0x39CC6802cF1625C30548B57D885932CB381EB4a4";
 
 
 //User data
-const pvtKey = "0x61d94d1c3335c6c30c1336da9e4d54a586f1ffa882338a8bb9f8268296434bc9";
+const pvtKey = "";
 const userAddress = "0x6D377De54Bde59c6a4B0fa15Cb2EFB84BB32D433";
 
 
