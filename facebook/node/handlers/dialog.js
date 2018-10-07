@@ -2,7 +2,8 @@ const
   utils =require('./utils'),
   config=require('../config/config'),
   db = require('../db/db'),
- redis = require("redis");
+ redis = require("redis"),
+guid = require('guid');
  const client = redis.createClient({
   host: config.REDIS_HOST || '127.0.0.1'
 });
