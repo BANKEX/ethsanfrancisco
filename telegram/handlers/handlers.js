@@ -170,6 +170,7 @@ async function getBalances(ctx) {
         json: true
     });
 
+
     let msg = `Ethereum balance: ${balanceETH/1e18}\n\nBitcoin balance: ${balanceBTC.balance}`;
 
     const tokens = user.tokenAddresses;
