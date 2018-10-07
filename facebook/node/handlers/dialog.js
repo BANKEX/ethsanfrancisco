@@ -11,14 +11,21 @@ function sendStartMenu(recipientId) {
   const user = db.user.find.oneByID(recipientId);
     
   if (user)
+  {
+    console.log("found account");
      sendMainMenu(recipientId);
+  }
   else
+  {
+    console.log("new account");
      createAccount(recipientId);
+  }
   }
 
 
 
   function createAccount(recipientId) {
+    console.log("start creating account");
     const key = guid.create().value;
     
     client.set(key, JSON.stringify({
