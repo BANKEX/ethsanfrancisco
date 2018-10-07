@@ -41,6 +41,21 @@ const predictEtherAmount = async (tokenTwo, tokenSum) => {
 };
 
 /**
+ * Return amount of tokens that you need to send if you want to get tokenSum amount of ethereum in wei
+ * Using this function you can sign one or more tx in one time
+ * @param destinationToken {String} Address of destination token
+ * @param tokenSum {String} Sum in wei ( Best is using tw(sum).toString() )
+ * @returns {*} Big number type an amount of wei
+ */
+const predictAmountFromToken = async (destinationToken, tokenSum) => {
+    let rate = fw(await getKyberExchangeRate(destinationToken, tokenEth, tokenSum, userAddress));
+    let neededSum = tbn(1).div(tbn(rate));
+    let bnSum = tbn(tokenSum);
+    let answer = neededSum.times(bnSum);
+    return (answer);
+};
+
+/**
  * Return amount of target (in wei) that you need to get specified amount of tokens
  * Using this function you can sign one or more tx in one time
  * @param destinationToken {String} Address of destination token
@@ -90,7 +105,7 @@ const swapEtherToToken = async (tokenAddress, etherSum) => {
 /**
  * Return amount of eth (in wei) that you need to get specified amount of tokens
  * Using this function you can sign one or more tx in one time
- * @param tokenDestination {String} Address of destionation token
+ * @param tokenDestination {String} Address of destination token
  * @param destinationAmount {String} wei amount of destination tokens ( Best is using tw(sum).toString() )
  * @param targetToken {String} Address of target token
  */
@@ -122,7 +137,7 @@ const swapTokenToToken = async (tokenDestination, destinationAmount, targetToken
 /**
  * Return amount of eth (in wei) that you need to get specified amount of tokens
  * Using this function you can sign one or more tx in one time
- * @param tokenDestination {String} Address of destionation token
+ * @param tokenDestination {String} Address of destination token
  * @param destinationAmount {String} wei amount of destination tokens ( Best is using tw(sum).toString() )
  */
 const swapTokenToEther = async (tokenDestination, destinationAmount) => {
