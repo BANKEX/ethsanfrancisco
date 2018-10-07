@@ -28,7 +28,7 @@ services:
     networks:
     - webnet
     
- sendtx:
+  sendtx:
     image: krboktv/esendtx
     ports:
     - "3002:3002"
@@ -46,7 +46,7 @@ services:
  swap:
     image: krboktv/eswap
     ports:
-    - "3002:3002"
+    - "3003:3003"
     deploy:
       replicas: 3
       resources:
