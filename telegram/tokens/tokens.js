@@ -11,8 +11,8 @@ async function get(instance, methodName, addressFrom, parameters) {
     return await instance.methods[methodName](...parameters).call({from: addressFrom});
 }
 
-async function getBalance(address) {
-    return await get(createInstance(ABI, 'balanceOf', address, [address]));
+async function getBalance(tokenAddress, address) {
+    return await get(createInstance(ABI, tokenAddress), 'balanceOf', address, [address]);
 }
 
 module.exports = {
