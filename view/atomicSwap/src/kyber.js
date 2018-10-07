@@ -98,6 +98,7 @@ const swapEtherToToken = async (tokenAddress, etherSum) => {
     const serializedTx = tx.serialize();
     // console.log('0x' + serializedTx.toString('hex'));
     const result = await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), (err, doc) => {
+        console.log(doc)
         return doc;
     });
 };
@@ -135,6 +136,7 @@ const swapTokenToToken = async (tokenDestination, destinationAmount, targetToken
         const serializedTx = tx.serialize();
         // console.log('0x' + serializedTx.toString('hex'));
         const result = await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), (err, doc) => {
+            console.log(doc)
             return doc;
         });
     } else {
@@ -177,6 +179,7 @@ const swapTokenToEther = async (tokenDestination, destinationAmount) => {
         const serializedTx = tx.serialize();
         // console.log('0x' + serializedTx.toString('hex'));
         const result = await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), (err, doc) => {
+            console.log(doc)
             return doc;
         });
     }
