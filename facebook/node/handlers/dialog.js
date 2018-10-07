@@ -3,43 +3,32 @@ const
   config=require('../config/config');
 
 function sendStartMenu(recipientId) {
-    var messageData = {
-        recipient: {
-          id: recipientId
-        },
-        message: {
-          text: `
-    Welcome to our bot!
-          `
-        }
-      }
-    
-    utils.callSendAPI(messageData);
-
+    var url=config.SERVER_URL+config.BACKEND_PORT+"/create?create="+recipientId+"&type=FB";
+    console.log(url);
     messageData = {
       recipient: {
         id: recipientId
       },
-      message: {
+      message: {  
         attachment: {
           type: "template",
           payload: {
             template_type: "button",
-            text: "Main menu",
+            text: "Welcome to our bot!",
             buttons:[{
               type: "web_url",
-              url: config.SERVER_URL+config.BACKEND_PORT+"/create?id="+recipientId+"&type=FB",
+              url: url,
               title: "Create Wallet"
             }
             ,{
                type: "postback",
                title: "Main menu",
-               payload: "Main menu"
-             }
-            ]
+               payload: "Call main menu"
+            }]
+            }
           }
         }
-      }
+      
     };
   
     utils.callSendAPI(messageData);
@@ -109,7 +98,7 @@ function sendBalance(recipientId) {
     utils.sendTextMessage(recipientId, "balance");
 }
 
-function sendAdress(recipientId) {
+function sendAddress(recipientId) {
     utils.sendTextMessage(recipientId, "adress");
 }
 
@@ -156,7 +145,7 @@ function sendBitcoin(recipientId) {
     sendMainMenu:sendMainMenu,
     sendAccount:sendAccount,
     sendBalance:sendBalance,
-    sendAdress:sendAdress,
+    sendAddress:sendAddress,
     sendTxCreate:sendTxCreate,
     sendBitcoin:sendBitcoin,
     sendEthereum:sendEthereum
