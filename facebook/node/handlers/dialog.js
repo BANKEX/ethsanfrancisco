@@ -9,7 +9,7 @@ const
 function sendStartMenu(recipientId) {
 
   const user = db.user.find.oneByID(recipientId);
-    
+  console.log(user);
   if (user)
   {
     console.log("found account");

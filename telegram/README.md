@@ -1,5 +1,5 @@
 ## About
-This is a node.js app with ..
+This is Telegram bot
 
 ## Deploy
 
