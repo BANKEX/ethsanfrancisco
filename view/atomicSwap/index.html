@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/custom.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body id="body">
+<!--<div class="col-12">-->
+<!--<div class="loader" id='loader'>-->
+<!--<div class='loader-container'>-->
+<!--<div class="row">-->
+<!--<div class="col-12 text-center">-->
+<!--<img style="max-width: 300px" src="img/preview.png">-->
+<!--</div>-->
+<!--<div class="col-12 bg">-->
+<!--<div class="loader-spin" id="loader-4">-->
+<!--<span></span>-->
+<!--<span></span>-->
+<!--<span></span>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<div class="container">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="col-12">
+        <div class='loader' id="loader">
+            <div class='loader-container'>
+                <div class="col-12 text-center">
+                    <img style="max-width: 300px" src="src/img/preview.png">
+                </div>
+                <div class="col-12 bg">
+                    <div class="loader-spin" id="loader-4">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div id="main" class="col-12 my-auto">
+            <div class="col-12">
+                <p align="center" style="font-size: 20px;"><strong style="color: black">Security info:</strong> you have
+                    <span id="time"></span> minutes to make this operation</p>
+                <table class="table table-hover table-dark">
+                    <tbody>
+                    <tr>
+                        <th scope="col">Destination token</th>
+                        <th id="destinationToken" scope="col"></th>
+                    </tr>
+                    </tbody>
+                    <tbody>
+                    <tr>
+                        <th scope="col">Target token</th>
+                        <th id="targetToken" scope="col"></th>
+                    </tr>
+                    </tbody>
+                    <tbody>
+                    <tr>
+                        <th scope="col">Destination sum</th>
+                        <th id="destSum" scope="col"></th>
+                    </tr>
+                    </tbody>
+                    <tbody>
+                    <tr>
+                        <th scope="col">Target sum</th>
+                        <th id="targSum" scope="col"></th>
+                    </tr>
+                    </tbody>
+                    <tbody>
+                    <tr>
+                        <th scope="col">Telegram account</th>
+                        <th id="nickname" scope="col"></th>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <form>
+                <h2 class="Asker text-center">Upload your QR</h2>
+                <div class="col-12 text-center">
+                    <form method="post" action="#" id="#">
+                        <div class="form-group files">
+                            <input type="file" class="form-control" multiple="">
+                        </div>
+                    </form>
+                </div>
+                <div class="text-center col-12">
+                    <div class="form-group">
+                        <label for="Password"><h2>Enter your password</h2></label>
+                        <input type="password" class="form-control" id="password" placeholder="Password">
+                    </div>
+                    <p id="error"></p>
+                    <br>
+                    <p id="success"></p>
+                    <!--                                                           swapEtherToToken(2 args) / swapTokenToToken(3 args) / swapTokenToEther(2 args)  you need to put user address and user private key to config.js or refactor
+                                                                                   just change function here (if swap to tokens = > tokens) and change config which token and what sum (in string but bn)
+                    -->
+                    <a class="btn btn-lg btn-warning btn-circle done" onclick="swapEtherToToken('0x659c4206b2ee8CC00af837CddA132eb30fA58df8', '100000000000000000')">Send transaction</a>
+                    <br>
+                    <br>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div style="display: none" class="alert alert-success col-12" id="Success_pop">
+        <div class="row">
+            <div class="col-10">
+                <h2>Success</h2>
+                <h5>You are done</h5>
+            </div>
+            <div class="col-2">
+                <button type="button" class="close" onclick="CloseAlert(1)">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/UI.js"></script>
+<script src="src/utils/web3.js"></script>
+<script src="src/utils/bignumber.js"></script>
+<script src="src/utils/keythereum.js"></script>
+<script src="src/utils/ethertx.js"></script>
+<script src="src/utils/utils.js"></script>
+<script src="src/config/config.js"></script>
+<script src="src/smartContract.js"></script>
+
+<script src="src/kyber.js"></script>
+</body>
+</html>

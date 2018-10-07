@@ -1,7 +1,7 @@
 const start = [
     ['👤 Account'],
     ['🖋 Send'],
-    ['➕ Add token address']
+    ['🔛 Swap'],
 ];
 
 module.exports = {

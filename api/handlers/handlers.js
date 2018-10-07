@@ -108,10 +108,36 @@ async function getTransaction(req,res) {
         });
 }
 
+async function getSwap(req,res) {
+    const id = req.params.guid;
+
+    getAsync(id)
+        .then(value => {
+            console.log(value)
+            if (value != null)
+                res.send({
+                    error: null,
+                    result: JSON.parse(value)
+                });
+            else
+                res.send({
+                    error: 'Deleted',
+                    result: null
+                });
+        })
+        .catch(e => {
+            res.send({
+                error: e.message,
+                result: null
+            });
+        });
+}
+
 module.exports = {
     createAccount: createAccount,
     createTransaction: createTransaction,
     getGuidLifetime: getGuidLifetime,
-    getTransaction: getTransaction
+    getTransaction: getTransaction,
+    getSwap: getSwap
 }
 
