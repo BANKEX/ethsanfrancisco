@@ -182,6 +182,7 @@ const _Ethereum = {
          * @returns {Promise<*>} Result
          */
         get: async (instance, methodName, addressFrom, ...parameters) => {
+            console.log(instance.methods)
             const result = await instance.methods[methodName](...parameters).call({from: addressFrom});
             return result;
         },
