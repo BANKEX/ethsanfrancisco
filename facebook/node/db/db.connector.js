@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
-require('dotenv').config({path: "./../.env"});
 const config = require("../config/config");
 const userName = config.LOGIN;
 const password = config.PASSWORD;
-const url = config.URL;
+const url = config.DB_URL;
 const dataBase = config.DB;
 
 const uri = `mongodb://${userName}:${password}@${url}/${dataBase}`;
