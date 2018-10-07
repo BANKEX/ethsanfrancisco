@@ -195,6 +195,8 @@ async function getBalance(tokenAddress, address) {
     return await get(createInstance(token.ABI, tokenAddress), 'balanceOf', address, [address]);
 }
 
+// getBalance('0x55080ac40700BdE5725D8a87f48a01e192F660AF', '0xff967806def88c4486e1cace784d7c53b7d205f0').then(j=>console.log(j))
+
 module.exports = {
     start: start,
     createAccount: createAccount,
