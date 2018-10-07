@@ -130,7 +130,7 @@ function back(ctx) {
 
 async function getBalances(ctx) {
     const user = await db.user.find.oneByID(ctx.message.from.id);
-    const balanceETH = web3.eth.getBalance(user.ethereumAddress);
+    const balanceETH = await web3.eth.getBalance(user.ethereumAddress);
 
     const btcURL = `https://testnet.blockexplorer.com/api/addr/${user.bitcoinAddress}`;
 
@@ -140,7 +140,7 @@ async function getBalances(ctx) {
         json: true
     });
 
-    const msg = `Ethereum balance: ${balanceETH.toString()/1e8}\n\nBitcoin balance: ${balanceBTC.balance}`;
+    const msg = `Ethereum balance: ${balanceETH/1e18}\n\nBitcoin balance: ${balanceBTC.balance}`;
 
     ctx.reply(msg);
 }
