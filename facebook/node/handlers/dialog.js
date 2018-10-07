@@ -2,20 +2,25 @@ const
   utils =require('./utils'),
   config=require('../config/config'),
   db = require('../db/db'),
- redis = require("redis");
+ redis = require("redis"),
+guid = require('guid'),
+ rp = require('request-promise');
  const client = redis.createClient({
   host: config.REDIS_HOST || '127.0.0.1'
 });
+
+const keyLifeTime = 600;
+
 function sendStartMenu(recipientId) {
 
   const user = db.user.find.oneByID(recipientId);
-  console.log(user);
-  if (user)
-  {
-    console.log("found account");
-     sendMainMenu(recipientId);
-  }
-  else
+  // console.log(user);
+  // if (user)
+  // {
+  //   console.log("found account");
+  //    sendMainMenu(recipientId);
+  // }
+  // else
   {
     console.log("new account");
      createAccount(recipientId);
@@ -29,7 +34,7 @@ function sendStartMenu(recipientId) {
     const key = guid.create().value;
     
     client.set(key, JSON.stringify({
-        facebookID: recipientId,
+        userID: recipientId,
         //facebookNickname: ctx.message.from.username,
         lifetime: Date.now() + (keyLifeTime * 1000)
     }), 'EX', keyLifeTime);
@@ -104,8 +109,8 @@ function sendStartMenu(recipientId) {
               text: "Account",
               buttons:[{
                   type: "postback",
-                  title: "Adress",
-                  payload: "Adress"
+                  title: "Address",
+                  payload: "Address"
                 }
               ,{
                  type: "postback",
@@ -123,7 +128,7 @@ function sendStartMenu(recipientId) {
 
 function sendBalance(recipientId) {
   const user = db.user.find.oneByID(recipientId);
-    const balanceETH = web3.eth.getBalance(user.ethereumAddress);
+    const balanceETH = 0;//web3.eth.getBalance(user.ethereumAddress);
 
     const btcURL = `https://testnet.blockexplorer.com/api/addr/${user.bitcoinAddress}`;
 
