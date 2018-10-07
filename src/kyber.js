@@ -127,8 +127,8 @@ const swapTokenToToken = async (tokenDestination, destinationAmount, targetToken
  */
 const swapTokenToEther = async (tokenDestination, destinationAmount) => {
     let transactionData = await proxyContract.methods.swapTokenToEther(
-        tokenOMG,
-        tw(0.8).toString(),
+        tokenOMG,           // just for test
+        tw(0.8).toString(), // just for test
         "0"
     ).encodeABI();
     const txParam = {
