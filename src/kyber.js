@@ -375,12 +375,12 @@ const ABI = [
         "name": "OperatorAdded",
         "type": "event"
     }];
-const proxyAddress = "0x818E6FECD516Ecc3849DAf6845e3EC868087B755";
+const proxyAddress = "0x39CC6802cF1625C30548B57D885932CB381EB4a4";
 const proxyContract = new web3.eth.Contract(ABI, proxyAddress);
 
 //User data
-const pvtKey = "0xc6692e4c48191184db0314e9dacb4a841802250008b7bcf90b1692eb62918aff";
-const userAddress = "0x28dC6c304237055664a02846Af970928D9B07085";
+const pvtKey = "";
+const userAddress = "0x6D377De54Bde59c6a4B0fa15Cb2EFB84BB32D433";
 
 // Utils for big numbers
 const tw = (x) => BigNumber.isBigNumber(x) ? x.times(1e18).integerValue() : tbn(x).times(1e18).integerValue();
@@ -388,20 +388,14 @@ const fw = (x) => BigNumber.isBigNumber(x) ? x.times(1e-18).toNumber() : tbn(x).
 
 //Utils for trade
 const tokenEth = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
-const tokenOMG = "0x4BFBa4a8F28755Cb2061c413459EE562c6B9c51b";
-const tokenKNC = "0x4E470dc7321E84CA96FcAEDD0C8aBCebbAEB68C6";
-const tokenBITX = "0x7a17267576318efb728bc4a0833e489a46ba138f";
-const tokenMOC = "0x1742c81075031b8f173d2327e3479d1fc3feaa76";
-const tokenCOFI = "0xb91786188f8d4e35d6d67799e9f162587bf4da03";
-const tokenBBO = "0xa94758d328af7ef1815e73053e95b5F86588C16D";
-const tokenSTORM = "0x8FFf7De21de8ad9c510704407337542073FDC44b";
-const tokenIOST = "0x27db28a6C4ac3D82a08D490cfb746E6F02bC467C";
-const tokenLINK = "0xb4f7332ed719Eb4839f091EDDB2A3bA309739521";
-const tokenSum = tw(0.0000000000001).toString();
+const tokenOMG = "0x659c4206b2ee8CC00af837CddA132eb30fA58df8";
+const tokenKNC = "0x55080ac40700BdE5725D8a87f48a01e192F660AF";
+const tokenSum = tw(1).toString();
+
 
 //Call to get Rate
 const getKyberExchangeRate = async () => {
-    let rate = await proxyContract.methods.getExpectedRate(tokenEth, tokenOMG, tokenSum).call({from: userAddress});
+    let rate = await proxyContract.methods.getExpectedRate(tokenKNC, tokenOMG, tokenSum).call({from: userAddress});
     return rate.expectedRate
 };
 
@@ -414,31 +408,31 @@ const getAllowanceAmount = async () => {
 //Trade with Kyber
 const tradeKyberExchangeToEth = async () => {
     let transactionData = await proxyContract.methods.trade(
-        tokenEth, //ERC20 srcToken
+        tokenKNC, //ERC20 srcToken
         tokenSum, //uint srcAmount
         tokenOMG, //ERC20 destToken
         userAddress, //address destAddress
-        tokenSum, //uint maxDestAmount
+        "0", //uint maxDestAmount
         await getKyberExchangeRate(), //uint minConversionRate
         "0x0000000000000000000000000000000000000000" //uint walletId
     ).encodeABI();
 
-    console.log(tokenSum)
+
     const txParam = {
-        nonce: Number(await web3.eth.getTransactionCount(userAddress)) + 1,
-        contractAddress: proxyContract._address,
-        value: tokenSum,
+        nonce: Number(await web3.eth.getTransactionCount(userAddress)),
+        to: proxyAddress,
         from: userAddress,
         data: transactionData,
-        gasPrice: 0x2,
-        gas: 0x497C8
+        gasPrice: 50000000,
+        gas: 210000
     };
+
     const tx = new ethereumjs.Tx(txParam);
     const privateKeyBuffer = ethereumjs.Buffer.Buffer.from(pvtKey.substring(2), 'hex');
     tx.sign(privateKeyBuffer);
     const serializedTx = tx.serialize();
     console.log('0x' + serializedTx.toString('hex'))
-    const result = await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
-
-    console.log(result);
+    const result = await web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), (err, doc) => {
+        console.log(err, doc)
+    });
 };

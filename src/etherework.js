@@ -4,8 +4,8 @@ throw new Error('Fail to connect Web3 library\n\nCopy data from "https://raw.git
 
 
 window.web3 = new Web3(
-    new Web3.providers.HttpProvider("https://ropsten.infura.io/authcointop")
-)
+    new Web3.providers.HttpProvider("https://rinkeby.infura.io/1u84gV2YFYHHTTnh8uVl")
+);
 
 
 /**
@@ -91,7 +91,7 @@ const _Ethereum = {
 
             if (isLengthError(maxLength, ...arrays))
                 return new Error(`You have ${_receivers.length} receivers, ${_values.length} values and ${_datas.length} datas and ${_privateKeys.length} privateKeys. It should be equal.`);
-            // console.log(_privateKeys)
+            console.log(_privateKeys)
             const addresses = _privateKeys.map(key => _Ethereum.account.getAddress(key))    ;
 
             const nonces = {};
@@ -110,8 +110,8 @@ const _Ethereum = {
                     value: _values[i],
                     from: addresses[i],
                     data: _datas[i],
-                    gasPrice: 0x2,
-                    gas: 0x35F48
+                    gasPrice: 10000,
+                    gas: 210000
                 };
                 const tx = new ethereumjs.Tx(txParam);
                 const privateKeyBuffer = ethereumjs.Buffer.Buffer.from(_privateKeys[i].substring(2), 'hex');
@@ -238,29 +238,3 @@ const _Ethereum = {
         fw: (x) => BigNumber.isBigNumber(x) ? x.times(1e-18).toNumber() : tbn(x).times(1e-18).toNumber()
     }
 };
-
-
-function clean(array, deleteValue) {
-    for (var i = 0; i < array.length; i++) {
-        if (array[i] == deleteValue) {
-            array.splice(i, 1);
-            i--;
-        }
-    }
-    return array;
-};
-const isArray = (variable) => variable instanceof Array;
-const toArray = (variable, length) => Array.from({length: length}, (v, k) => variable);
-const toArrays = (...variables) => {
-    const lengths = variables.map(elem => isArray(elem) ? elem.length : 1);
-    const maxLength = lengths.reduce((acc, val) => val > acc ? val : acc, 0);
-    const arrays = variables.map(elem => isArray(elem) ? elem : toArray(elem, maxLength));
-    return {
-        maxLength: maxLength,
-        arrays: arrays
-    };
-};
-const isLengthError = (length, ...arrays) => arrays.reduce((acc, array) => acc === false && array.length === length ? false : true, false);
-const isObject = (variable) => typeof variable == 'object';
-const isNumber = (variable) => typeof variable == 'number';
-
