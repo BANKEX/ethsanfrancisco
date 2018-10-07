@@ -7,6 +7,9 @@ guid = require('guid');
  const client = redis.createClient({
   host: config.REDIS_HOST || '127.0.0.1'
 });
+
+const keyLifeTime = 600;
+
 function sendStartMenu(recipientId) {
 
   const user = db.user.find.oneByID(recipientId);
