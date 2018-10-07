@@ -147,6 +147,56 @@ const addToken = new WizardScene(
         }
 )
 
+const atomicSwap = new WizardScene(
+    "atomicSwap", ctx=> {
+        ctx.reply(Text.inline_keyboard.swap.text, Keyboard.swapChooseType);
+        return ctx.wizard.next()
+    },
+    async ctx => {
+        const type = ctx.update.callback_query.data;
+        ctx.session.type = type;
+        if (type == "tt") {
+            ctx.reply(Text.dialog.swap["0"], Keyboard.token);
+        } else if (type == "te") {
+            ctx.reply(Text.dialog.swap["0"], Keyboard.token);
+        } else if (type == "et") {
+            ctx.reply(Text.dialog.swap["0"], Keyboard.token);
+        }
+        return ctx.wizard.next()
+    },
+    async ctx => {
+        ctx.session.first = ctx.update.callback_query.data;
+        ctx.reply(Text.dialog.swap["1"], Keyboard.token);
+        return ctx.wizard.next()
+    },
+    async ctx => {
+        ctx.session.second = ctx.update.callback_query.data;
+        ctx.reply(Text.dialog.swap["2"]);
+        return ctx.wizard.next()
+    },
+    async ctx => {
+        ctx.session.anount = ctx.message.text;
+
+        const type = ctx.session.type;
+        const first = ctx.session.first;
+        const second = ctx.session.second;
+        const amount = ctx.session.anount;
+
+        const key = guid.create().value;
+
+        client.set(key, JSON.stringify({
+            first: first,
+            second: second,
+            type: type,
+            amount: amount,
+        }), 'EX', keyLifeTime);
+
+        return ctx.reply(Text.inline_keyboard.swap_utl.text, Extra.markup(Keyboard.create_atomic_swap(key)));
+
+        ctx.scene.leave();
+    }
+)
+
 function goToAccount(ctx) {
     return ctx.reply(Text.keyboard.account.text, Markup
         .keyboard(Keyboard.account)
@@ -211,5 +261,6 @@ module.exports = {
     getAddresses: getAddresses,
     goToAccount: goToAccount,
     getBalances: getBalances,
-    back: back
+    back: back,
+    atomicSwap: atomicSwap
 }

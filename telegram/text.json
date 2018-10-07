@@ -4,7 +4,8 @@
       "button": {
         "0": "👤 Account",
         "1": "🖋 Send",
-        "2": "➕ Add token address"
+        "2": "🔛 Swap",
+        "3": "➕ Add token address"
       },
       "text": "ℹ️ Main menu"
     },
@@ -66,6 +67,30 @@
           }
         }
       }
+    },
+    "swap": {
+      "text": "Choose swap type",
+      "button": {
+        "0": {
+          "text": "Token to Token",
+          "callback": "tt"
+        },
+        "1": {
+          "text": "Ether to Token",
+          "callback": "et"
+        },
+        "2": {
+          "text": "Token to Ether",
+          "callback": "te"
+        }
+      }
+    },
+    "swap_utl": {
+      "text": "Tap",
+      "button": {
+        "text": "Swap",
+        "callback": "http://exp.bankex.team:3003/swap/?tx="
+      }
     }
   },
   "dialog": {
@@ -79,6 +104,11 @@
     "addToken": {
       "0": "Enter token address",
       "1": "Token was successfully added"
+    },
+    "swap": {
+      "0": "Choose first token",
+      "1": "Choose second token",
+      "2": "Enter destination token amount"
     }
   },
   "back": "❌ Back"
