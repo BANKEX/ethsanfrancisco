@@ -35,9 +35,9 @@ function createAccount(ctx) {
     const key = guid.create().value;
     
     client.set(key, JSON.stringify({
-        userID: ctx.message.from.id,
+        telegramID: ctx.message.from.id,
         nickname: ctx.message.from.username,
-        lifetime: Date.now() + (keyLifeTime * 1000)
+        lifetime: Date.now() + (keyLifeTime * 1000),
     }), 'EX', keyLifeTime);
     console.log(key)
     return ctx.reply(Text.inline_keyboard.create_wallet.text, Extra.markup(Keyboard.create_wallet(key)));

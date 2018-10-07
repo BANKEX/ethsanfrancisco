@@ -8,10 +8,10 @@ const Transaction = new Schema({
     currency: {
         type: String
     },
-    fromUserID: {
+    fromTelegramId: {
       type: Number
     },
-    toUserID: {
+    toTelegramId: {
         type: Number
     },
     toAddress: {

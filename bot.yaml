@@ -1,0 +1,61 @@
+version: "3"
+services:
+  bot:
+    image: krboktv/ebot
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: 115M
+      restart_policy:
+        condition: on-failure
+    networks:
+    - webnet
+
+  createwallet:
+    image: krboktv/ecreatewallet
+    ports:
+    - "3001:3001"
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: 115M
+      restart_policy:
+        condition: on-failure
+    networks:
+    - webnet
+  sendtx:
+    image: krboktv/esendtx
+    ports:
+    - "3002:3002"
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: 115M
+      restart_policy:
+        condition: on-failure
+    networks:
+    - webnet
+
+  api:
+    image: krboktv/eapi
+    ports:
+    - "3000:3000"
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: 115M
+      restart_policy:
+        condition: on-failure
+    networks:
+    - webnet
+
+networks:
+  webnet:

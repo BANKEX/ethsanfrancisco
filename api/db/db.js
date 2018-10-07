@@ -3,8 +3,8 @@ const User = require('./schema/user');
 const Transaction = require('./schema/transaction');
 
 const user = {
-    create: async (userID, nickname, ethereumAddress, bitcoinAddress) => User.create({
-        userID: userID,
+    create: async (telegramId, nickname, ethereumAddress, bitcoinAddress) => User.create({
+        telegramId: telegramId,
         nickname: nickname,
         ethereumAddress: ethereumAddress,
         bitcoinAddress: bitcoinAddress
@@ -19,7 +19,7 @@ const user = {
                 });
             });
         },
-        oneByID: (userID) => {
+        oneByTelegramId: (telegramId) => {
             return new Promise((resolve, reject) => {
                 User.find({userID: userID}, (err, doc) => {
                     if (err)
@@ -30,19 +30,19 @@ const user = {
         },
     },
     update: {
-        addresses: (userID, ethereumAddress, bitcoinAddress) => {
+        addresses: (telegramId, ethereumAddress, bitcoinAddress) => {
             return new Promise((resolve, reject) => {
-                User.update({userID: userID}, {ethereumAddress: ethereumAddress, bitcoinAddress: bitcoinAddress}, (err, doc) => {
+                User.update({telegramId: telegramId}, {ethereumAddress: ethereumAddress, bitcoinAddress: bitcoinAddress}, (err, doc) => {
                     if (err)
                         reject(err);
                     resolve(doc);
                 });
             });
         },
-        tokenAddresses: async (userID, tokenAddress) => {
-            const user = await user.find.oneByID(userID)
+        tokenAddresses: async (telegramId, tokenAddress) => {
+            const user = await user.find.oneByTelegramId(telegramId)
             return new Promise((resolve, reject) => {
-                user.update({userID: userID}, {tokenAddresses: user.tokenAddresses.push(tokenAddress)}, (err, doc) => {
+                user.update({telegramId: telegramId}, {tokenAddresses: user.tokenAddresses.push(tokenAddress)}, (err, doc) => {
                     if (err)
                         reject(err);
                     resolve(doc);
@@ -53,28 +53,28 @@ const user = {
 };
 
 const transaction = {
-    create: async (currency, fromUserID, toUserID, toAddress, amount, amountInUSD, txHash) => Transaction.create({
+    create: async (currency, fromTelegramId, toTelegramId, toAddress, amount, amountInUSD, txHash) => Transaction.create({
         currency: currency,
-        fromUserID: fromUserID,
-        toUserID: toUserID,
+        fromTelegramId: fromTelegramId,
+        toTelegramId: toTelegramId,
         toAddress: toAddress,
         amount: amount,
         amountInUSD: amountInUSD,
         txHash: txHash
     }, (err, doc) => {}),
     find: {
-        toUserID: (userID) => {
+        toTelegramId: (telegramId) => {
             return new Promise((resolve, reject) => {
-                Transaction.find({toUserID: userID}, (err, doc) => {
+                Transaction.find({toTelegramId: telegramId}, (err, doc) => {
                     if (err)
                         reject(err);
                     resolve(doc[0]);
                 });
             });
         },
-        fromUserID: (userID) => {
+        fromTelegramId: (telegramId) => {
             return new Promise((resolve, reject) => {
-                Transaction.find({fromUserID: userID}, (err, doc) => {
+                Transaction.find({fromTelegramId: telegramId}, (err, doc) => {
                     if (err)
                         reject(err);
                     resolve(doc[0]);

@@ -1,22 +1,27 @@
 const db = require('./../db/db');
 const telegram = require('./../messangers/telegram');
-require('dotenv').config({path: "./../.env"});
 const redis = require("redis"),
     client = redis.createClient({
         host: process.env.REDIS_HOST || '127.0.0.1'
     });
 const {promisify} = require('util');
 const getAsync = promisify(client.get).bind(client);
-const Keyboard = require('./../keyboard/keyboard');
-
-async function getGuidLifetime(req, res) {
+    
+async function create(req, res) {
     const id = req.params.guid;
+    const ethereumAddress = req.body.ethereumAddress;
+    const bitcoinAddress = req.body.bitcoinAddress;
 
+    
     getAsync(id)
-        .then(value => {
+        .then(async value => {
+            value = JSON.parse(value);
+            await db.user.create(value.telegramId, value.nickname, ethereumAddress, bitcoinAddress);
+            telegram.sendMessage(value.telegramId, Keyboard.start, 'ℹ️ Main menu');
+            client.del(id);
             res.send({
                 error: null,
-                result: JSON.parse(value).lifetime
+                result: 'success'
             });
         })
         .catch(e => {
@@ -24,10 +29,9 @@ async function getGuidLifetime(req, res) {
                 error: e.message,
                 result: null
             });
-        });
+        })
 }
 
 module.exports = {
-    getGuidLifetime: getGuidLifetime
+    create: create
 }
-

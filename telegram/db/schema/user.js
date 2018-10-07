@@ -5,7 +5,7 @@ const User = new Schema({
         type: Schema.ObjectId,
         auto: true 
     },
-    userID: {
+    telegramId: {
         type: Number,
     },
     nickname: {
