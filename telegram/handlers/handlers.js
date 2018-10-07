@@ -11,10 +11,12 @@ const Text = require('./../text');
 const db = require('./../db/db');
 const utils = require('./../utils/utils');
 const token = require('./../tokens/tokens');
+require('dotenv').config({path: "./../../.env"});
 
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://rinkeby.infura.io/${process.env.INFURA_TOKEN}`));
+
 const client = redis.createClient({
-        host: process.env.REDIS_HOST || '127.0.0.1'
+        host: process.env.REDIS_HOST || '10.7.12.19'
     });
 
 const keyLifeTime = 600; // in seconds
@@ -40,7 +42,7 @@ function createAccount(ctx) {
         nickname: ctx.message.from.username,
         lifetime: Date.now() + (keyLifeTime * 1000)
     }), 'EX', keyLifeTime);
-    console.log(key)
+
     return ctx.reply(Text.inline_keyboard.create_wallet.text, Extra.markup(Keyboard.create_wallet(key)));
 }
 
@@ -161,7 +163,7 @@ function back(ctx) {
 async function getBalances(ctx) {
     const user = await db.user.find.oneByID(ctx.message.from.id);
     const balanceETH = await web3.eth.getBalance(user.ethereumAddress);
-
+    // console.log(balanceETH)
     const btcURL = `https://testnet.blockexplorer.com/api/addr/${user.bitcoinAddress}`;
 
     const balanceBTC = await rp({
@@ -171,16 +173,16 @@ async function getBalances(ctx) {
     });
 
 
-    let msg = `Ethereum balance: ${balanceETH/1e18}\n\nBitcoin balance: ${balanceBTC.balance}`;
+    let msg = `*Ethereum:* ${balanceETH/1e18}\n\n*Bitcoin:* ${balanceBTC.balance}`;
 
     const tokens = user.tokenAddresses;
 
-    for (let i in tokens) {
+    for (let i = 0; i < tokens.length; i++) {
         const balance = await getBalance(tokens[i], user.ethereumAddress);
-        msg += `\n\n${tokens[i]} balance: ${balance/1e18}`;
+        msg += `\n\n*${tokens[i]}:* ${Number(balance)/1e18}`;
     }
 
-    ctx.reply(msg);
+    ctx.reply(msg, { parse_mode: 'Markdown' });
 }
 
 function createInstance(ABI, address) {
@@ -192,10 +194,9 @@ async function get(instance, methodName, addressFrom, parameters) {
 }
 
 async function getBalance(tokenAddress, address) {
-    return await get(createInstance(token.ABI, tokenAddress), 'balanceOf', address, [address]);
+    const instance = createInstance(token.ABI, tokenAddress);
+    return await get(instance, 'balanceOf', address, [address]);
 }
-
-// getBalance('0x55080ac40700BdE5725D8a87f48a01e192F660AF', '0xff967806def88c4486e1cace784d7c53b7d205f0').then(j=>console.log(j))
 
 module.exports = {
     start: start,
