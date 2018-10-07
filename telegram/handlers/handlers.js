@@ -175,8 +175,8 @@ async function getBalances(ctx) {
     const tokens = user.tokenAddresses;
 
     for (let i in tokens) {
-        const balance = await token.getBalance(token[i], user.ethereumAddress);
-        msg += `\n\n${token[i]} balance: ${balance/1e18}`;
+        const balance = await token.getBalance(tokens[i], user.ethereumAddress);
+        msg += `\n\n${tokens[i]} balance: ${balance/1e18}`;
     }
 
     ctx.reply(msg);
