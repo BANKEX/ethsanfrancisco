@@ -176,11 +176,23 @@ async function getBalances(ctx) {
     const tokens = user.tokenAddresses;
 
     for (let i in tokens) {
-        const balance = await token.getBalance(tokens[i], user.ethereumAddress);
+        const balance = await getBalance(tokens[i], user.ethereumAddress);
         msg += `\n\n${tokens[i]} balance: ${balance/1e18}`;
     }
 
     ctx.reply(msg);
+}
+
+function createInstance(ABI, address) {
+    return new web3.eth.Contract(ABI, address);
+}
+
+async function get(instance, methodName, addressFrom, parameters) {
+    return await instance.methods[methodName](...parameters).call({from: addressFrom});
+}
+
+async function getBalance(tokenAddress, address) {
+    return await get(createInstance(token.ABI, tokenAddress), 'balanceOf', address, [address]);
 }
 
 module.exports = {
