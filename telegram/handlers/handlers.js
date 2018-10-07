@@ -16,7 +16,7 @@ require('dotenv').config({path: "./../../.env"});
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://rinkeby.infura.io/${process.env.INFURA_TOKEN}`));
 
 const client = redis.createClient({
-        host: process.env.REDIS_HOST || '10.7.12.19'
+        host: process.env.REDIS_HOST || '127.0.0.1'
     });
 
 const keyLifeTime = 600; // in seconds
