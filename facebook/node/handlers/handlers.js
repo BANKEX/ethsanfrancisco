@@ -87,30 +87,28 @@ function receivedMessage(event) {
       // keywords and send back the corresponding example. Otherwise, just echo
       // the text we received.
       switch (messageText.replace(/[^\w\s]/gi, '').trim().toLowerCase()) {
-        case 'hello':
         case 'hi':
           dialog.sendStartMenu(senderID);
           break;
-        
-        case 'Main menu':
+        case 'main menu':
           dialog.sendMainMenu(senderID);
           break;
-        case 'Account':
+        case 'account':
           dialog.sendAccount(senderID);
           break;
-        case 'Balance':
+        case 'balance':
           dialog.sendBalance(senderID);
           break;
-        case 'Adress':
+        case 'adress':
           dialog.sendAdress(senderID);
           break;
-        case 'Send money':
+        case 'send money':
           dialog.sendTxCreate(senderID);
           break;
-        case 'Send Ethereum':
+        case 'send Ethereum':
           dialog.sendEthereum(senderID);
           break;
-        case 'Send Bitcoin':
+        case 'send Bitcoin':
           dialog.sendBitcoin(senderID);
           break;
         case 'test button':
@@ -164,8 +162,9 @@ function receivedPostback(event) {
   
     // The 'payload' param is a developer-defined field which is set in a postback
     // button for Structured Messages.
-    console.log(event.postback);
     
+    let text = JSON.stringify(event.postback);
+    console.log(text);
     var payload = event.postback.payload;
   
     console.log("Received postback for user %d and page %d with payload '%s' " +
