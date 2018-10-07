@@ -13,6 +13,6 @@ RUN bower --allow-root install crypto-js
 
 WORKDIR /app
 
-EXPOSE 3001
+EXPOSE 3003
 
 ENTRYPOINT ["node", "server.js"]

@@ -2,8 +2,8 @@ const proxyAddress = "0x39CC6802cF1625C30548B57D885932CB381EB4a4";
 
 
 //User data
-const pvtKey = "";
-const userAddress = "0x6D377De54Bde59c6a4B0fa15Cb2EFB84BB32D433";
+let pvtKey = "";
+let userAddress = "";
 
 
 //Utils for trade
