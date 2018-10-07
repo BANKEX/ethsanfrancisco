@@ -84,42 +84,48 @@ async function sendTransaction() {
             currency,
             toAddress,
             amount,
+            isToken
         } = transactionData;
-
-        amount = currency !== 'Ethereum' ? BL.utils.tw(amount).toNumber() : BL.Ethereum.utils.tw(amount).toNumber();
-
-        const rawtx = await BL[currency].transactions.signTransaction(decryptedData[currency], toAddress, amount);
-        console.log(rawtx)
-
-        let txHash;
-        try {
-            txHash = await BL[currency].transactions.sendSigned(rawtx);
-        } catch (e) {
-            addError('Try again later. Your last transaction could may be not confirmed');
-            throw new Error('Try again later. Your last transaction could may be not confirmed');
-        };
-
-        $('.done').hide();
 
         let transactionHash;
 
-        if (txHash.txid != undefined)
-            if (txHash.txid.result == undefined)
-                transactionHash = txHash.txid;
+        if (isToken != true) {
+            amount = currency !== 'Ethereum' ? BL.utils.tw(amount).toNumber() : BL.Ethereum.utils.tw(amount).toNumber();
+
+            const rawtx = await BL[currency].transactions.signTransaction(decryptedData[currency], toAddress, amount);
+            console.log(rawtx)
+
+            let txHash;
+            try {
+                txHash = await BL[currency].transactions.sendSigned(rawtx);
+            } catch (e) {
+                addError('Try again later. Your last transaction could may be not confirmed');
+                throw new Error('Try again later. Your last transaction could may be not confirmed');
+            };
+
+            $('.done').hide();
+
+            if (txHash.txid != undefined)
+                if (txHash.txid.result == undefined)
+                    transactionHash = txHash.txid;
+                else
+                    transactionHash = txHash.txid.result;
             else
-                transactionHash = txHash.txid.result;
-        else
-            transactionHash = txHash[0];
+                transactionHash = txHash[0];
+        }  else {
+            amount = BL.Ethereum.utils.tw(amount).toNumber();
+            transactionHash = (await sendToken(decryptedData['Ethereum'], currency, toAddress, amount))[0];
+        }
 
-
-        setTransactionURL(currency, 'testnet', transactionHash);
+        if (isToken != true) {
+            setTransactionURL(currency, 'testnet', transactionHash);
+        } else {
+            setTransactionURL('Ethereum', 'testnet', transactionHash);
+        }
 
         const response = await sendTransactionDataToServer(transactionHash);
 
         closeLoader();
-
-        console.log(txHash)
-
     } catch (e) {
         addHint(e.message);
     }

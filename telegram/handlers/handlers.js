@@ -44,25 +44,34 @@ function createAccount(ctx) {
 }
 
 const sendTransaction = new WizardScene(
-    "sendTransaction", ctx=> {
-        ctx.reply(Text.dialog.sendTransaction["0"]);
+    "sendTransaction", ctx => {
+        ctx.reply(Text.dialog.sendTransaction["0"], { parse_mode: 'Markdown' });
+        return ctx.wizard.next()
+    },
+    ctx=> {
+        if (ctx.message.text == 'token') {
+            ctx.session.isToken = true;
+            ctx.reply(Text.dialog.sendTransaction["4"]);
+        } else {
+            ctx.session.isToken = false;
+            ctx.reply(Text.dialog.sendTransaction["1"]);
+        }
         return ctx.wizard.next()
     },
     ctx => {
         ctx.session.currency = ctx.message.text;
-        ctx.reply(Text.dialog.sendTransaction["1"]);
+        ctx.reply(Text.dialog.sendTransaction["2"]);
         return ctx.wizard.next()
     },
     ctx => {
         ctx.session.to = ctx.message.text;
-        ctx.reply(Text.dialog.sendTransaction["2"]);
+        ctx.reply(Text.dialog.sendTransaction["3"]);
         return ctx.wizard.next()
     },  
     async ctx => {
         const currency = ctx.session.currency;
         const amount = ctx.message.text;
         const tickerFrom = currency == 'Ethereum' ? 'ETH' : 'BTC';
-        const tickerTo = currency == 'Ethereum' ? 'ETH' : 'BTC';
         const amountInUSD = await utils.course.convert(tickerFrom, "USD", amount);
 
         const key = guid.create().value;
@@ -75,7 +84,10 @@ const sendTransaction = new WizardScene(
         let fromAddress;
 
         const user = await db.user.find.oneByID(ctx.message.from.id);
-        fromAddress = user[`${currency.toLowerCase()}Address`];
+        if (ctx.session.isToken)
+            fromAddress = user[`ethereumAddress`];
+        else
+            fromAddress = user[`${currency.toLowerCase()}Address`];
 
         if (currency == 'Ethereum' && web3.utils.isAddress(userTo)) {
             toAddress = userTo;
@@ -88,7 +100,11 @@ const sendTransaction = new WizardScene(
             }
             const user = await db.user.find.oneByNickname(to);
             toUserID = user.userID;
-            toAddress = currency == 'Ethereum' ? user.ethereumAddress : user.bitcoinAddress;
+            if (ctx.session.isToken) {
+                toAddress = user.ethereumAddress;
+            } else {
+                toAddress = currency == 'Ethereum' ? user.ethereumAddress : user.bitcoinAddress;
+            }
             checker = true;
         }
         
@@ -100,14 +116,27 @@ const sendTransaction = new WizardScene(
             toNickname: checker ? ctx.session.to : '',
             toAddress: toAddress,
             amount: amount,
-            amountInUSD: amountInUSD,
-            lifetime: Date.now() + (keyLifeTime * 1000)
+            amountInUSD: ctx.session.isToken ? '0.000002' : amountInUSD,
+            lifetime: Date.now() + (keyLifeTime * 1000),
+            isToken: ctx.session.isToken
         }), 'EX', keyLifeTime);
 
         return ctx.reply(Text.inline_keyboard.send_transaction.text, Extra.markup(Keyboard.create_transaction(key)));
 
         ctx.scene.leave()
     },
+)
+
+const addToken = new WizardScene(
+        "addToken", ctx=> {
+            ctx.reply(Text.dialog.addToken["0"]);
+            return ctx.wizard.next()
+        },
+        async ctx => {
+            await db.user.update.tokenAddresses(ctx.message.from.id, ctx.message.text);
+            ctx.reply(Text.dialog.addToken["1"]);
+            ctx.scene.leave()
+        }
 )
 
 function goToAccount(ctx) {
@@ -148,6 +177,7 @@ async function getBalances(ctx) {
 module.exports = {
     start: start,
     createAccount: createAccount,
+    addToken: addToken,
     sendTransaction: sendTransaction,
     getAddresses: getAddresses,
     goToAccount: goToAccount,

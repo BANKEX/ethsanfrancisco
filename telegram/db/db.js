@@ -50,14 +50,20 @@ const user = {
             });
         },
         tokenAddresses: async (userID, tokenAddress) => {
-            const user = await user.find.oneByID(userID)
-            return new Promise((resolve, reject) => {
-                user.update({userID: userID}, {tokenAddresses: user.tokenAddresses.push(tokenAddress)}, (err, doc) => {
-                    if (err)
-                        reject(err);
-                    resolve(doc);
+            User.find({userID: userID}, (err, doc) => {
+                if (err)
+                    return err;
+                const tokens = doc[0].tokenAddresses;
+                tokens.push(tokenAddress);
+                return new Promise((resolve, reject) => {
+                    User.update({userID: userID}, {tokenAddresses: tokens}, (err, doc) => {
+                        if (err)
+                            reject(err);
+                        resolve(doc);
+                    });
                 });
             });
+
         }
     }
 };

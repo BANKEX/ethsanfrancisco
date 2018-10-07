@@ -3,7 +3,8 @@
     "start": {
       "button": {
         "0": "👤 Account",
-        "1": "🖋 Send money"
+        "1": "🖋 Send money",
+        "2": "➕ Add token address"
       },
       "text": "ℹ️ Main menu"
     },
@@ -33,9 +34,15 @@
   },
   "dialog": {
     "sendTransaction": {
-      "0": "Choose currency",
-      "1": "Enter receiver @nickname or address",
-      "2": "Enter amount of currency (10 or 1$)"
+      "0": "Enter: `token` or `currency`?",
+      "1": "Enter currency: Ethereum or Bitcoin",
+      "2": "Enter receiver @nickname or address",
+      "3": "Enter amount of currency (10 or 1$)",
+      "4": "Enter token address"
+    },
+    "addToken": {
+      "0": "Enter token address",
+      "1": "Token was successfully added"
     }
   },
   "back": "❌ Back"

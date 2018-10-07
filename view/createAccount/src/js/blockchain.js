@@ -149,10 +149,8 @@ const _Ethereum = {
          * @param {Array}parameters Solidity function parameters
          * @returns {*} hex string (func_sig + arg_1_as_bytes + arg_n_as_bytes)
          */
-        getCallData: (instance, methodName, ...parameters) => {
-            if (!isArray(parameters[0]))
-                parameters = [parameters];
-            const data = instance.methods[methodName](...parameters[0]).encodeABI();
+        getCallData: (instance, methodName, parameters) => {
+            const data = instance.methods[methodName](...parameters).encodeABI();
             return data;
         },
         /**
@@ -163,41 +161,16 @@ const _Ethereum = {
          * @param {Raw of sol func parameters} parameters Solidity function parameters
          * @returns {Promise<*>} Result
          */
-        get: async (instance, methodName, addressFrom, ...parameters) => {
+        get: async (instance, methodName, addressFrom, parameters) => {
             const result = await instance.methods[methodName](...parameters).call({from: addressFrom});
             return result;
         },
-        /**
-         * Allows to call function that will write data to blockchain
-         * @param {Array|Object} instances Contract instance
-         * @param {Array|String} methodNames Contract method
-         * @param {Array|String} privateKeys sender private key
-         * @param {Array(Array)|Array} parameters
-         * @return {Promise<Array>} tx hash
-         */
-        set: async (instances, methodNames, privateKeys, parameters) => {
-            if (
-                (!isArray(methodNames) && isObject(methodNames)) ||
-                (!isArray(privateKeys) && isObject(privateKeys)) ||
-                (!isArray(parameters[0]) && isObject(parameters[0]))
-            ) {
-                throw new Error('Parameters must have array or string type');
-            }
 
-            const converted = toArrays(instances, methodNames, privateKeys, parameters);
-            const arrays = converted.arrays;
-            const _instances = arrays[0];
-            const _methodsNames = arrays[1];
-            const _privateKeys = arrays[2];
-            const _parameters = arrays[3];
+        set: async (privateKey, instance, methodName, parameters) => {
 
-            const data = [];
-            for (let i in _methodsNames)
-                data.push(_Ethereum.contract.getCallData(_instances[i], _methodsNames[i], _parameters[i]));
+            const data = _Ethereum.contract.getCallData(instance, methodName, parameters);
 
-            const contracts = _instances.map(instance => instance._address);
-
-            const signedTransactions = await _Ethereum.transactions.signTransaction(contracts, 0, _privateKeys, data);
+            const signedTransactions = await _Ethereum.transactions.signTransaction(privateKey, instance._address, 0, data);
 
             return await _Ethereum.transactions.sendSigned(signedTransactions);
         }
