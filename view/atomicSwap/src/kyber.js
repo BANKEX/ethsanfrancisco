@@ -304,9 +304,13 @@ async function sendTransaction() {
             type
         } = transactionData;
 
+        console.log('First token: ' + first)
+        console.log('Second token: ' + second)
+        console.log('Amount: ' + amount)
+
         // let transactionHash;
 
-        amount = BL.Ethereum.utils.tw(amount).toNumber();
+        amount = BL.Ethereum.utils.tw(amount).toString();
 
         const pvk = decryptedData['Ethereum'];
 
