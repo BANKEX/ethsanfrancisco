@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const config = require("../config/config");
 require('dotenv').config({path: "./../.env"});
+const config = require("../config/config");
 const userName = config.LOGIN;
 const password = config.PASSWORD;
 const url = config.URL;

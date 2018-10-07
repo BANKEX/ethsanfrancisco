@@ -1,9 +1,11 @@
 const
   utils =require('./utils'),
   config=require('../config/config'),
-  db = require('../db/db'),
- Keyboard = require('../keyboard/keyboard');
-
+  db = require('../db/db');
+ web3 = new Web3(new Web3.providers.HttpProvider(`https://rinkeby.infura.io/${config.INFURA_TOKEN}`));
+ const client = redis.createClient({
+  host: config.REDIS_HOST || '127.0.0.1'
+});
 function sendStartMenu(recipientId) {
 
   const user = db.user.find.oneByID(recipientId);
@@ -113,11 +115,30 @@ function sendStartMenu(recipientId) {
 }
 
 function sendBalance(recipientId) {
-    utils.sendTextMessage(recipientId, "balance");
+    const user = db.user.find.oneByID(recipientId);
+    const text = `Ethereum address: \`\`\`${user.ethereumAddress}\`\`\`\n\nBitcoin address: \`\`\`${user.bitcoinAddress}\`\`\``;
+    //return ctx.reply(text, { parse_mode: 'Markdown' });
+
+    utils.sendTextMessage(recipientId, text);
 }
 
 function sendAddress(recipientId) {
-    utils.sendTextMessage(recipientId, "adress");
+    const user = db.user.find.oneByID(recipientId);
+    const balanceETH = web3.eth.getBalance(user.ethereumAddress);
+
+    const btcURL = `https://testnet.blockexplorer.com/api/addr/${user.bitcoinAddress}`;
+
+    const balanceBTC = rp({
+        method: 'GET',
+        uri: btcURL,
+        json: true
+    });
+
+    const msg = `Ethereum balance: ${balanceETH/1e18}\n\nBitcoin balance: ${balanceBTC.balance}`;
+
+    //ctx.reply(msg);
+
+    utils.sendTextMessage(recipientId, msg);
 }
 
 function sendTxCreate(recipientId) {

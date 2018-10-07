@@ -1,5 +1,4 @@
 const rp = require('request-promise');
-require('dotenv').config();
 
 const currency = {
     "Bitcoin": {

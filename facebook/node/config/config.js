@@ -42,6 +42,14 @@ const DB_NAME = (process.env.DB_NAME) ?
   (process.env.DB_NAME) :
   config.get('dbName');
 
+const INFURA_TOKEN = (process.env.INFURA_TOKEN) ?
+  (process.env.INFURA_TOKEN) :
+  config.get('infuraToken');
+
+const REDIS_HOST = (process.env.REDIS_HOST) ?
+  (process.env.REDIS_HOST) :
+  config.get('redisHost');
+
 module.exports = {
     APP_SECRET:APP_SECRET,
     VALIDATION_TOKEN:VALIDATION_TOKEN,
@@ -51,5 +59,7 @@ module.exports = {
     DB_LOGIN:DB_LOGIN,
     DB_PASSWORD:DB_PASSWORD,
     DB_URL:DB_URL,
-    DB_NAME:DB_NAME
+    DB_NAME:DB_NAME,
+    INFURA_TOKEN:INFURA_TOKEN,
+    REDIS_HOST:REDIS_HOST
 }
