@@ -138,7 +138,9 @@ function sendBalance(recipientId) {
         json: true
     });
 
-    const msg = `Ethereum balance: ${balanceETH/1e18}\n\nBitcoin balance: ${balanceBTC.balance}`;
+    const btcBalance=0;
+
+    const msg = `Ethereum balance: ${balanceETH/1e18}\n\nBitcoin balance: ${btcBalance}`;
 
     //ctx.reply(msg);
 
@@ -149,10 +151,16 @@ function sendBalance(recipientId) {
 
 function sendAddress(recipientId) {
   const user = db.user.find.oneByID(recipientId);
-  const text = `Ethereum address: \`\`\`${user.ethereumAddress}\`\`\`\n\nBitcoin address: \`\`\`${user.bitcoinAddress}\`\`\``;
+  if(user!=undefined)
+  {
+    const text = `Ethereum address: \`\`\`${user.ethereumAddress}\`\`\`\n\nBitcoin address: \`\`\`${user.bitcoinAddress}\`\`\``;
   //return ctx.reply(text, { parse_mode: 'Markdown' });
 
-  utils.sendTextMessage(recipientId, text);
+    utils.sendTextMessage(recipientId, text);
+  }
+  else{
+    utils.sendTextMessage(recipientId, "Sorry, we can't find your account.");
+  }
 }
 
 function sendTxCreate(recipientId) {
@@ -165,7 +173,7 @@ function sendTxCreate(recipientId) {
             type: "template",
             payload: {
               template_type: "button",
-              text: "Send Money",
+              text: "Send Money (not implemented yet)",
               buttons:[{
                   type: "postback",
                   title: "Ethereum",
