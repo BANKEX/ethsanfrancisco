@@ -133,11 +133,19 @@ function sendTxCreate(recipientId) {
 }
 
 function sendEthereum(recipientId) {
-    utils.sendTextMessage(recipientId, "Input valid adress or nickname");
+    utils.sendTextMessage(recipientId, "Input valid adress and amount, like this 'Eth 0x0000 10'");
 }
 
 function sendBitcoin(recipientId) {
-    utils.sendTextMessage(recipientId, "Input valid adress or nickname");
+    utils.sendTextMessage(recipientId, "Input valid adress and amount, like this 'Btc 0x0000 10'");
+}
+
+function sendEthTx(recipientId) {
+  utils.sendTextMessage(recipientId, "Your tx was sent");
+}
+
+function sendBtcTx(recipientId) {
+  utils.sendTextMessage(recipientId, "Your tx was sent");
 }
 
   module.exports = {
@@ -148,5 +156,7 @@ function sendBitcoin(recipientId) {
     sendAddress:sendAddress,
     sendTxCreate:sendTxCreate,
     sendBitcoin:sendBitcoin,
-    sendEthereum:sendEthereum
+    sendEthereum:sendEthereum,
+    sendEthTx:sendEthTx,
+    sendBtcTx:sendBtcTx
 }

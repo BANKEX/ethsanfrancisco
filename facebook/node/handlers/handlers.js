@@ -111,6 +111,12 @@ function receivedMessage(event) {
         case 'send Bitcoin':
           dialog.sendBitcoin(senderID);
           break;
+        case messageText.includes("Eth 0x"):
+          dialog.sendBitcoin(senderID);
+          break;
+        case messageText.includes("Btc 0x"):
+          dialog.sendBitcoin(senderID);
+          break;
         case 'test button':
           utils.sendButtonMessage(senderID);
           break;
