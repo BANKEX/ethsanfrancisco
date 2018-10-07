@@ -7,7 +7,7 @@
     "dbLogin":"admin",
     "dbPassword":"ObshiDostup1",
     "dbUrl":"exp.bankex.team:27017",
-    "dbName":"facebot",
+    "dbName":"admin",
     "infuraToken":"1u84gV2YFYHHTTnh8uVl",
     "redisHost":"10.7.12.19"
 }

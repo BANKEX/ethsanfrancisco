@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 const config = require("../config/config");
-const userName = config.LOGIN;
-const password = config.PASSWORD;
+const userName = config.DB_LOGIN;
+const password = config.DB_PASSWORD;
 const url = config.DB_URL;
-const dataBase = config.DB;
+const dataBase = config.DB_NAME;
 
 const uri = `mongodb://${userName}:${password}@${url}/${dataBase}`;
-
+console.log(uri);
 const options = {
     autoIndex: false,
     reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
