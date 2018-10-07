@@ -8,7 +8,7 @@ const User = new Schema({
     userID: {
         type: Number,
     },
-    userFacebookID: {
+    facebookID: {
         type: Number,
     },
     nickname: {

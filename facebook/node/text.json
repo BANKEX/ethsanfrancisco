@@ -1,0 +1,42 @@
+{
+  "keyboard": {
+    "start": {
+      "button": {
+        "0": "👤 Account",
+        "1": "🖋 Send money"
+      },
+      "text": "ℹ️ Main menu"
+    },
+    "account": {
+      "text": "This is your account",
+      "button": {
+        "0": "Addresses",
+        "1": "Balances"
+      }
+    }
+  },
+  "inline_keyboard": {
+    "create_wallet": {
+      "text": "Here you can create account",
+      "0": {
+        "button": "🔐 Create wallet",
+        "callback": "http://exp.bankex.team:3001/create/?create="
+      }
+    },
+    "send_transaction": {
+      "text": "Tap button to sign and send transaction",
+      "0": {
+        "button": "🖋 Send money",
+        "callback": "http://exp.bankex.team:3002/send/?tx="
+      }
+    }
+  },
+  "dialog": {
+    "sendTransaction": {
+      "0": "Choose currency",
+      "1": "Enter receiver @nickname or address",
+      "2": "Enter amount of currency (10 or 1$)"
+    }
+  },
+  "back": "❌ Back"
+}

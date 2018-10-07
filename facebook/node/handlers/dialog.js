@@ -1,8 +1,31 @@
 const
   utils =require('./utils'),
-  config=require('../config/config');
+  config=require('../config/config'),
+  db = require('../db/db'),
+ Keyboard = require('../keyboard/keyboard');
 
 function sendStartMenu(recipientId) {
+
+  const user = db.user.find.oneByID(recipientId);
+    
+  if (user)
+     sendMainMenu(recipientId);
+  else
+     createAccount(recipientId);
+  }
+
+
+
+  function createAccount(recipientId) {
+    const key = guid.create().value;
+    
+    client.set(key, JSON.stringify({
+        facebookID: recipientId,
+        //facebookNickname: ctx.message.from.username,
+        lifetime: Date.now() + (keyLifeTime * 1000)
+    }), 'EX', keyLifeTime);
+    console.log(key);
+
     var url=config.SERVER_URL+config.BACKEND_PORT+"/create?create="+recipientId+"&type=FB";
     console.log(url);
     messageData = {
@@ -19,11 +42,6 @@ function sendStartMenu(recipientId) {
               type: "web_url",
               url: url,
               title: "Create Wallet"
-            }
-            ,{
-               type: "postback",
-               title: "Main menu",
-               payload: "Call main menu"
             }]
             }
           }
@@ -32,7 +50,7 @@ function sendStartMenu(recipientId) {
     };
   
     utils.callSendAPI(messageData);
-  }
+}
 
   function sendMainMenu(recipientId) {
     messageData = {
